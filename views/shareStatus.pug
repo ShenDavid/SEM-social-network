@@ -1,0 +1,35 @@
+extends layout
+
+
+block stylesheet
+    link(href='/css/chat.css', rel='stylesheet')
+
+block scripts
+  script(src="/js/share_status.js")
+
+block content
+    h7#success_message
+    div.col-md-1
+        if ( user )
+            - var imageName = [ "/images/status_icon/ok_circle_black.png" , "/images/status_icon/help_triangle_black.png", "/images/status_icon/emergency_heart_black.png" ];
+            - var statuses = [  "OK", "HELP", "EMERGENCY" ];
+            - var colors = [ "green", "yellow", "red" ];
+            - var userStatus = user.status - 1;
+            ul.nav
+                each val in [0,1,2]
+                    if userStatus === val
+                        li.shareStatus(style = "background-color:lightgrey;" )
+                            a( href='#', onclick="changeStatus(" + ( val + 1 ) + ")" ) #{statuses[val]}
+                                img(src=imageName[val], class=colors[val])
+                    else
+                        li.shareStatus(style = "background-color:white;" )
+                            a( href='#', onclick="changeStatus(" + ( val + 1 ) + ")") #{statuses[val]}
+                                img(src=imageName[val], class=colors[val])
+
+
+
+
+
+
+
+

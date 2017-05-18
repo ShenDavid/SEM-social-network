@@ -1,0 +1,95 @@
+extends layout
+mixin printAllVehicles()
+    each vehicle in vehicles
+        tr(resource_name=vehicle.name)
+            td #{vehicle.name}
+            td
+                div.dropdown
+                    button.allocated_to.btn.btn-xs.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown')
+                        | Allocate
+                        span.caret
+                    ul.dropdown-menu
+                        + printAllResources("vehicle", vehicle)
+
+mixin printAllPersonnel()
+    each person in personnel
+        tr(resource_name=person.username)
+            td #{person.username}
+            td
+                div.dropdown
+                    button.allocated_to.btn.btn-xs.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown')
+                        | Allocate
+                        span.caret
+                    ul.dropdown-menu
+                        + printAllResources("person", person)
+
+mixin printAllocatedResource(allocated_resources)
+    ul.list-group
+        each resource in allocated_resources
+            li.list-group-item #{resource.resource_type === "vehicle" ? resource.resource_obj.name : resource.resource_obj.username}
+                span.badge(type="button", onclick="unallocate('"+resource.resource_type+"', '"+JSON.stringify(resource.resource_obj)+"')") x
+
+mixin printAllAreas()
+    each area in areas
+        table.table.table-striped.table-responsive
+            thead
+                th #{area.name}
+                    +printAllocatedResource(area.resources)
+            tbody
+                + printRelatedIncidents(area)
+
+mixin printAllResources(resource_type, resource_obj)
+    each area in areas
+        li
+            a(onclick="allocate('area', '"+JSON.stringify(area)+"', '"+resource_type+"', '"+JSON.stringify(resource_obj)+"')")
+                =area.name
+    each incident in incidents
+        li
+            a(onclick="allocate('incident', '"+JSON.stringify(incident)+"', '"+resource_type+"', '"+JSON.stringify(resource_obj)+"')")
+                =incident.name
+
+mixin printRelatedIncidents(area)
+    each incident in incidents
+        - if (incident.areaId && incident.areaId.toString() == area._id.toString())
+            tr
+                td #{incident.name}
+                    +printAllocatedResource(incident.resources)
+
+block stylesheet
+    link(href='/css/allocateResource.css', rel='stylesheet')
+
+block scripts
+    script(src="/js/allocateResource.js")
+
+block content
+    .media
+        .media-left
+            .panel.panel-primary
+                .panel-heading
+                    h3 Vehicles
+                .panel-body
+                    table.table.table-striped.table-responsive
+                        thead
+                            th Name
+                            th
+                        tbody#AllVehicles
+                            + printAllVehicles()
+            .panel.panel-primary
+                .panel-heading
+                    h3 Personnel
+                .panel-body
+                    table.table.table-striped.table-responsive
+                        thead
+                            th Name
+                            th
+                        tbody#AllPersonnel
+                            + printAllPersonnel()
+
+        .media-body
+            .panel.panel-primary
+                .panel-heading
+                    h3 Areas and Incidents
+                .panel-body
+                    + printAllAreas()
+    button.btn.btn-lg.btn-primary.btn-block(type="button", onclick="submit()") Submit
+    button.btn.btn-lg.btn-default.btn-block(onclick="history.go(-1);") Cancel

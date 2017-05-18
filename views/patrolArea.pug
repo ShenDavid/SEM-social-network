@@ -1,0 +1,72 @@
+extends layout
+
+mixin printAreaList(area_data)
+    each item in area_data
+        if(item.name != "")
+            li(id = item.name, class = "list-group-item")
+                a(ondblclick='deleteArea(' + '"' + item.name + '"' +')')
+                    .media.user-list-height
+                        .media-left
+                            span.user.user-list-name=item.name
+
+
+
+block stylesheet
+    link(href='/css/map.css', rel='stylesheet')
+
+block scripts
+    script.
+        var patrolAreaData="#{JSON.stringify(area_data)}"
+    script(src='https://maps.googleapis.com/maps/api/js?sensor=false&libraries=drawing&key=AIzaSyA3a46LuMhZij5MQW2SMsEmma4Sg0GOBFY', type='text/javascript')
+    script(src='/lib/gmaps/gmaps.js')
+    script(src='/js/patrol_area.js')
+
+block content
+    body
+        #helpModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
+            .modal-dialog(role='document')
+                .modal-content
+                    .modal-header
+                        h5#exampleModalLabel.modal-title HELP
+                        |
+                        button.close(type='button', data-dismiss='modal', aria-label='Close')
+                            span(aria-hidden='true') &times;
+                    .modal-body
+                        h4 HOW TO CREATE AN AREA:
+                        li Click on the middle-top of the map, there's a polygon icon on the right of the hand icon. you can simply click on it, and click on the map to determin the polygon point. If you want to complete the wildfire area, you must complelte(close) the polygon.
+                        h4 HOW TO DELETE THE AREA:
+                        li Double click on the name of the area on the list.
+                    .modal-footer
+                        button.btn.btn-secondary(type='button', data-dismiss='modal') Close
+
+        #myModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel')
+            .modal-dialog(role='document')
+                .modal-content
+                    .modal-header
+                        button.close(type='button', data-dismiss='modal', aria-label='Close')
+                            span(aria-hidden='true') &times;
+                        h4#exampleModalLabel.modal-title Add a pin
+                    .modal-body
+                        form#patrolForm
+                            .form-group
+                                label.control-label(for='message-text') Please name the ploygon:
+                                textarea#message-text.form-control(name = "namePatrol")
+                    .modal-footer
+                        button.btn.btn-default(type='button', data-dismiss='modal' id = 'failed_marker') Close
+                        |
+                        button#success_marker.btn.btn-primary(type='button') Save
+        .media
+            .media-left#sideMenu
+                - if (area_data){
+                +printAreaList(area_data)
+                -}
+                    //li.list-group-item
+                    //    .media.user-list-height
+                    //      .media-left
+                    //        span.user.user-list-name Utils
+                    //        span#chatlist.hideMe=chatlist
+
+            .media-body
+                #map
+            .media-bottom
+                a#patrol_help.glyphicon.glyphicon-question-sign HELP

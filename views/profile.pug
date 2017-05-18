@@ -1,0 +1,79 @@
+extends layout
+
+mixin printUserSelect(user_list)
+  each item in user_list
+    li
+      a(href='/users/'+item.username)
+        =item.username
+
+mixin printGenderSelection()
+  -if(profile.sex == 'Female') {
+    select#sex.form-control
+      option(value='Female') Female
+      option(value='Male') Male
+  -}
+  -else{
+    select#sex.form-control
+      option(value='Male') Male
+      option(value='Female') Female
+
+  -}
+
+
+block stylesheet
+  link(href="/css/profile.css", rel="stylesheet")
+
+block scripts
+  script(src='/js/profile.js')
+  script(src='/lib/jquery/dist/jquery.min.js')
+  script(src='/lib/crypto-js/crypto-js.js')
+
+
+
+block content
+  div.row
+    div.col-xs-1
+    div.col-xs-10
+      h2#userinfo Welcome #{user.username}
+      br
+      form
+        label(for='usr') Name:
+        input#name.form-control(type='text', value=profile.name)
+        label(for='dob') Date of Birth:
+        input#dob.form-control(type='text', placeholder='MM/DD/YYYY', value=profile.dob)
+
+        div.row
+          div.col-md-3.col-xs-7.form-group
+            label(for='sex') Sex
+            +printGenderSelection()
+
+        label(for='address') Address:
+        input#address.form-control(type='text', value=profile.address)
+        label(for='phone') Phone:
+        input#phone.form-control(type='text', value=profile.phone)
+        label(for='email') Email:
+        input#email.form-control(type='text',value=profile.email)
+
+        h3 Medical Info
+        label(for='conditions') Conditions:
+        input#conditions.form-control(type='text', value=profile.conditions)
+
+        label(for='allergies') Allergies:
+        input#allergies.form-control(type='text', value=profile.allergies)
+
+        label(for='drugs') Drugs:
+        input#drugs.form-control(type='text', value=profile.drugs)
+
+        h3 Emergency Contacts
+        label(for='emusr') Name:
+        input#emer-name.form-control(type='text', value=profile.emerName)
+        label(for='usr') Phone:
+        input#emer-phone.form-control(type='text', value=profile.emerPhone)
+        label(for='usr') Email:
+        input#emer-email.form-control(type='text', value=profile.emerEmail)
+
+block bottomNav
+  div.col-md-4.col-xs-5.form-group.patient-button
+    input#submitButton.btn.btn-primary(type="button", value="Submit", onclick="submitProfile()")
+  div.col-md-4.col-xs-5.form-group.patient-button
+    input#resetButton.btn.btn-primary(type="button", value="Cancel", onclick="cancelProfile()")

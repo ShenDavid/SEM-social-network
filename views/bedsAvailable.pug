@@ -1,0 +1,35 @@
+extends layout
+
+block stylesheet
+    link(href="/css/registerHospital.css", rel="stylesheet")
+
+block scripts
+    script(src='/lib/jquery/dist/jquery.min.js')
+    script(src='/js/bedsAvailable.js')
+
+block content
+    div.row
+        div.col-xs-1
+        div.col-xs-10
+            -   var text = ""
+            - if (hospital_name == null){
+            -   text = "You are not registered to any hospital. Please register to one"}
+            - else {
+            -   text = "Beds currently available at " + hospital_name
+            -   }
+            h7#error
+            .help-block
+                h7#introduction #{text}
+                if hospital_name != null
+                    if beds_available === -1
+                        input#beds(type="text", name="Enter Available Beds", value="?")
+                    else
+                        input#beds(type="text", name="Enter Available Beds", value= beds_available)
+
+
+            span.btn-group
+                if hospital_name != null
+                    .btn.btn-primary(type='button', onclick='submit()')
+                        | Submit
+                    .btn.btn-primary(type='button', onclick='resetForm()')
+                        | Cancel

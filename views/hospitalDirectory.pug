@@ -1,0 +1,37 @@
+extends layout
+
+block stylesheet
+  link(href="/css/registerHospital.css", rel="stylesheet")
+  
+block scripts
+  script(src='/lib/jquery/dist/jquery.min.js')
+  script(src='/js/hospitalDirectory.js')
+
+block content
+  div.row
+    div.col-md-4
+      .panel.panel-primary
+        .panel-heading
+          h2 Hospital Directory
+        .panel-body
+          table.table.table-striped.table-responsive
+          - if (hospitals.length === 0) {
+              label No hospital record found.
+          - }
+          - else {
+            - for (var i = 0; i < hospitals.length; i++) {
+                div.panel.panel-default
+                  div.panel-body
+                    div.col-xs-10
+                      label #{hospitals[i].name}
+                    div
+                      a.btn.btn-primary(href="/registerHospital/" + hospitals[i].name)
+                        span.fa.fa-chevron-right
+            - }
+          - }
+
+    div.col-xs-12.navbar-brand.navbar-brand-primary.footer.navbar-fixed-bottom
+      div.column.col-xs-10
+      div.column.col-xs-1
+        a.navbar-brand.navbar-brand-primary(href="/registerHospital/")
+          span.fa.fa-plus

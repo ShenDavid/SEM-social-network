@@ -1,0 +1,136 @@
+mixin setNavIconAndTitle(new_nav_icon, new_nav_title)
+  - if (nav_icon === undefined)
+    - nav_icon = new_nav_icon;
+  - if (nav_title === undefined)
+    - nav_title = new_nav_title;
+
+- if (user)
+  - if (user.type % 10 === 0)
+    + setNavIconAndTitle("fa fa-users", "ESN Citizen")
+  - if (user.type % 10 === 1)
+    + setNavIconAndTitle("fa fa-users", "ESN Admin")
+  - if (user.type % 10 === 3)
+    + setNavIconAndTitle("fa fa-phone", "ESN Dispatch")
+  - if (user.type % 10 === 4 || user.type % 10 === 5)
+    + setNavIconAndTitle("fa fa-taxi", "ESN Police")
+  - if (user.type % 10 === 6 || user.type % 10 === 7)
+    + setNavIconAndTitle("fa fa-fire", "ESN Fire")
+  - if (user.type % 10 === 8)
+    + setNavIconAndTitle("fa fa-plus-square", "ESN Paramedic")
+  - if (user.type % 10 === 9)
+    + setNavIconAndTitle("fa fa-user-md", "ESN Nurse")
+
+.navbar.navbar-main.navbar-default(role='navigation')
+  .container-fluid
+    .navbar-header
+      button#hamburger.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#main-nav')
+        span.sr-only Toggle navigation
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      a.toggle.pull-right.visible-xs(href='#sidebar-chat', data-effect='st-effect-1')
+      a#backButton.navbar-brand.navbar-brand-primary(onclick="history.go(-1);")
+        span.glyphicon.glyphicon-triangle-left
+      div#pageTitle
+        a.navbar-brand.navbar-brand-primary(href='/')
+          span(class=nav_icon)
+          | &nbsp;
+          = nav_title
+
+    #main-nav.collapse.navbar-collapse
+      ul.nav.navbar-nav.navbar-user
+        li.dropdown
+          ul#main-menu.dropdown-menu
+            - if (user)
+              - if (user.type % 10 === 0 || user.type % 10 === 1)
+                li
+                  a(href='/sharestatus') Share Status
+              - if (user.type % 10 === 3)
+                li
+                  a(href='#') 911 Calls
+              - if (user.type % 10 >= 3 && user.type % 10 <= 8)
+                li
+                  a(href='/incidents') Incidents
+              - if (user.type % 10 >= 4 && user.type % 10 <= 7)
+                li
+                  a(href='#') Resource Allocation
+              - if (user.type % 10 === 9)
+                li
+                  a(href='/bedsavailable') Beds Available
+              - if (user.type % 10 === 8 || user.type % 10 === 9)
+                li
+                  a(href='/patients') Patients
+              - if (user.type % 10 === 8 || user.type % 10 === 9)
+                li
+                  a(href='#') First Aid
+              - if (user.type % 10 === 8 || user.type % 10 === 9)
+                li
+                  a(href='#') Drugs
+              - if (user.type % 10 === 8)
+                li
+                  a(href='/findhospital') Find Hospital
+              - if (user.type % 10 === 6)
+                li
+                  a(href='#') Wildfire Areas
+              - if (user.type % 10 === 4)
+                li
+                  a(href='/patrolArea') Patrol Areas
+              - if (user.type % 10 === 4 || user.type % 10 === 6)
+                li
+                  a(href='#') Settings
+              - if (user.type % 10 >= 3 && user.type % 10 <= 8)
+                li
+                  a(href='/organizationChart') Organization
+            li
+              a(href='/connect') Connect
+            - if (user)
+              - if (user.type % 10 === 8)
+                li
+                  a(href='#') ESN Fire
+              - if (user.type % 10 === 8 || user.type % 10 === 9)
+                li
+                  a(href='hospitalDirectory') Hospital Directory
+              - if (user.type % 10 === 0 || user.type % 10 === 1)
+                li
+                  a(href='/reach911') 911
+              li
+                a(href='/users/'+username) Profile
+              - if (user.type % 10 === 1)
+                li
+                  a(href='/administer_users/') Administer User Profile
+              - if (user.type % 10 === 1)
+                li
+                  a(href='administerOrganization') Administer Organization Chart
+            li
+              a(href='/search') Search
+            li
+              a(href='/groups') Groups
+            li
+              a(href='/map') Map
+            li
+              a(href='/logout' onclick='logout()') Logout
+            li
+              a(href='/ocr') Ocr
+          - if (user)
+            - if (user.type % 10 >= 4 && user.type % 10 <= 7)
+              li.dropdown
+                a.dropdown-toggle(href='#', data-toggle='dropdown')
+                  | ESN Paramedic
+                  span.caret
+                ul.dropdown-menu(role='paramedicMenu')
+                  li
+                    a(href='#') Patients
+                  li
+                    a(href='#') First Aid
+                  li
+                    a(href='#') Drugs
+                  li
+                    a(href='#') Find Hospital
+            - if (user.type % 10 === 8)
+              li.dropdown
+                a.dropdown-toggle(href='#', data-toggle='dropdown')
+                  | ESN Fire
+                  span.caret
+                ul.dropdown-menu(role='fireMenu')
+                  li
+                    a(href='#') Resource Allocation

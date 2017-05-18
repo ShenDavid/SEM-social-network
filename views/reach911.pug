@@ -1,0 +1,218 @@
+extends layout
+
+block stylesheet
+    link(href='/css/reach911.css', rel='stylesheet')
+
+block scripts
+    script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyA3a46LuMhZij5MQW2SMsEmma4Sg0GOBFY', type='text/javascript')
+    script(type='text/javascript' src='/js/speechRecognizer.js')
+    script(src='/lib/gmaps/gmaps.js')
+    script(src='/js/reach911.js')
+
+block content
+    body
+        ul#myTab.nav.nav-tabs
+          li.active
+            a(href='#one', data-target='#one, #one_else', data-toggle='tab') 1
+          li
+            a#ToTwo(href='#two', data-target='#two', data-toggle='tab') 2
+          li
+            a#ToThree(href='#three', data-target='#three', data-toggle='tab') 3
+          li
+            a#ToFour(href='#four', data-target='#four', data-toggle='tab') 4
+            //a#ToFour(href="/messages/groups/" + "IC-" + username, data-target='#four', data-toggle='tab') 4
+
+
+        #myTabContent.tab-content
+          #one.tab-pane.fade.in.active
+              div
+                  .input-group
+                      input#address.form-control(type='text', placeholder='Enter the location...')
+                      |
+                      span.input-group-btn
+                          button#go.btn.btn-secondary(type='button', onclick='showAddress()') Go!
+
+              br
+              div.row
+
+                div.col-md-6.col-xs-6.form-group.patient-button
+                    input#firstNext.btn.btn-primary(data-target='#two', type="button", value="Next")
+                    button(onclick='startConverting("addressPage");')
+                        i.fa.fa-microphone
+              #map
+
+
+          #two.tab-pane.fade
+              h1 Select Emergency type
+              .btn-group(data-toggle='buttons')
+                  label.btn.btn-primary.buttton-block
+                      input#fireoption1(type='radio', name='options', autocomplete='off')
+                      |  Fire Emergency
+                  br
+                  br
+                  br
+                  label.btn.btn-primary.buttton-block
+                      input#medicaloption2(type='radio', name='options', autocomplete='off')
+                      |  Medical Emergency
+                  br
+                  br
+                  br
+                  label.btn.btn-primary.buttton-block
+                      input#policeoption3(type='radio', name='options', autocomplete='off')
+                      |  Police Emergency
+                  script(type='text/javascript' src='/js/speechRecognizer.js')
+                  button(onclick='startConverting("emergencyTypePage");')
+                      i.fa.fa-microphone
+              br
+              br
+              input#secondNext.btn.btn-primary(data-target='#three', type="button", value="Next")
+          #three.tab-pane.fade
+              .emergency_panel#emergency_medical
+                  p Provide patient's medical data
+                  button(onclick='startConverting("medicalFormPage");')
+                      i.fa.fa-microphone
+                  label(for='age') Age
+                  input#age.form-control(type='text')
+                  label Are you a patient?
+                      |
+                      input(type='radio', name='isPatient', value='Yes')
+                      |  Yes
+                      input(type='radio', name='isPatient', value='No')
+                      |  No
+                  br
+                  label Sex
+                      |
+                      input#chooseSexMale(type='radio', name='sex', value='Male')
+                      |  Male
+                      input#chooseSexFemale(type='radio', name='sex', value='Female')
+                      |  Female
+                  br
+                  label Conscient
+                      |
+                      input(type='radio', name='Conscient', value='Yes')
+                      |  Yes
+                      input(type='radio', name='Conscient', value='No')
+                      |  No
+                  br
+                  label Breathing Normally
+                      |
+                      input(type='radio', name='isBreath', value='Yes')
+                      |  Yes
+                      input(type='radio', name='isBreath', value='No')
+                      |  No
+                  br
+                  label(for='complaint') Chief Complaint
+                  input#complaint.form-control(type='text')
+                  br
+              .emergency_panel#emergency_fire
+                    p Provide fire scene data
+                    button(onclick='startConverting("fireFormPage");')
+                        i.fa.fa-microphone
+                    label Have you smelled smoke?
+                        |
+                        input(type='radio', name='smoke', value='Yes')
+                        |  Yes
+                        input(type='radio', name='smoke', value='No')
+                        |  No
+                    br
+                    label(for='smokecolor') Smoke Color
+                    input#smokecolor.form-control(type='text')
+                    br
+                    label(for='smokequantity') Smoke Quantity
+                    input#smokequantity.form-control(type='text')
+                    br
+                    label Have you seen flame?
+                        |
+                        input(type='radio', name='flame', value='Yes')
+                        |  Yes
+                        input(type='radio', name='flame', value='No')
+                        |  No
+                    br
+                    label Are there any injuries?
+                        |
+                        input(type='radio', name='injury', value='Yes')
+                        |  Yes
+                        input(type='radio', name='injury', value='No')
+                        |  No
+                    br
+                    label(for='structype') Structure Type
+                    input#structype.form-control(type='text')
+                    br
+                    label Are there any hazardous materials?
+                        |
+                        input(type='radio', name='hmaterial', value='Yes')
+                        |  Yes
+                        input(type='radio', name='hmaterial', value='No')
+                        |  No
+                    br
+                    label(for='insidePeople') Number of people inside
+                    input#insidePeople.form-control(type='text')
+                    br
+                    label Can people get out?
+                        |
+                        input(type='radio', name='getout', value='Yes')
+                        |  Yes
+                        input(type='radio', name='getout', value='No')
+                        |  No
+                    br
+              .emergency_panel#emergency_police
+                  p Provide police scene data
+                  button(onclick='startConverting("policeFormPage");')
+                      i.fa.fa-microphone
+                  label Are there any weapons?
+                      |
+                      input(type='radio', name='weapon', value='Yes')
+                      |  Yes
+                      input(type='radio', name='weapon', value='No')
+                      |  No
+                  br
+                  label Anyone injured?
+                      |
+                      input(type='radio', name='injured', value='Yes')
+                      |  Yes
+                      input(type='radio', name='injured', value='No')
+                      |  No
+                  br
+                  label(for='suspect') Suspect descriptions
+                  input#suspect.form-control(type='text')
+                  br
+                  label(for='vehicle') Suspect vehicle descriptions
+                  input#vehicle.form-control(type='text')
+                  br
+                  div.row
+                      div
+                          span(style='{{display:')
+                              input#upload(type='file', name='upload_file', accept='image/jpeg')
+                      input#uploadPhoto.btn.btn-primary( type="button", value="Detect", onclick='takePhoto()')
+                  br
+                  label(for='means') Suspect means
+                  input#means.form-control(type='text')
+                  br
+                  label(for='travel') Direction of travel
+                  input#travel.form-control(type='text')
+                  br
+                  label Have means left scene?
+                      |
+                      input(type='radio', name='left', value='Yes')
+                      |  Yes
+                      input(type='radio', name='left', value='No')
+                      |  No
+                  br
+                  label Are you safe?
+                      |
+                      input(type='radio', name='safe', value='Yes')
+                      |  Yes
+                      input(type='radio', name='safe', value='No')
+                      |  No
+                  br
+                  label(for='detail') Details of crime/situation
+                  input#detail.form-control(type='text')
+                  br
+
+              //a#thirdNext(href="/messages/groups/" + "IC-" + username) Next
+              input#thirdNext.btn.btn-primary(data-target='#four', type="button", value="Next", onclick='sendData()')
+          #four.tab-pane.fade
+              iframe(src="/messages/groups/" + "IC-" + username)
+        hr
+        #myTabContent.tab-content
+          #one_else.tab-pane.fade.in.active

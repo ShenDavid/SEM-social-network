@@ -1,0 +1,72 @@
+extends layout
+
+mixin printPerson(missing_person_list)
+   -if(missing_person_list) {
+      //console.log("There are missing ppl")
+      each person in missing_person_list
+         - //console.log(person);
+
+         tr(id=person._id)
+            td(id="name"+person._id) #{person.firstName} #{person.lastName} (#{person.age})
+            td(id="location"+person._id) #{person.location}
+            td(id="reporter"+person._id) #{person.reporter} (#{person.relationship})
+            td(id="status"+person._id)
+               -if(person.status == "Missing") {
+               p Missing
+               button.btn-warning.btn-xs(id="found"+person._id, title='Click if Found', onclick="reportFound('"+person._id+"')") FOUND?
+               -}
+               -else {
+               p Found by&nbsp;
+                  a(id="chatWith"+person.foundBy, href="/messages/private/"+username+"/"+person.foundBy, title="Chat with "+person.foundBy) #{person.foundBy}
+               -}
+   -}
+
+block stylesheet
+   link(href='/css/chat.css', rel='stylesheet')
+
+block content
+   div.col-md-1
+   div.col-md-6
+      h1#reportPersonFormTitle Report Missing Person
+
+      p Please report a new missing person in the form below:
+      div.row
+         div.col-md-3.col-xs-5.form-group
+            label(for='firstName') First Name:
+            input#firstName.form-control(type='text', placeholder='e.g. John')
+         div.col-md-3.col-xs-5.form-group
+            label(for='lastName') Last Name:
+            input#lastName.form-control(type='text', placeholder='e.g. Smith')
+      br
+      div.row
+         div.col-md-2.col-xs-3.form-group
+            label(for='age') Age:
+            input#age.form-control(type='text', placeholder='e.g. 20')
+         div.col-md-3.col-xs-6.form-group
+            label(for='location') Last Location:
+            input#location.form-control(type='text', placeholder='e.g. Los Gatos')
+      br
+      div.row
+         div.col-md-3.col-xs-7.form-group
+            label(for='relationship') Relation:
+            select#relationship.form-control
+               option(value='Relative') Relative
+               option(value='Friend') Friend
+               option(value='Stranger') Stranger
+      div.row
+         h5#invalidInput.text-danger
+      div.row
+         div.col-md-2.col-xs-3
+            button#reportPersonButton.btn.btn-primary(type='button', onclick='addMissingPerson()') Report
+   div.col-md-4
+      h2#peopleListTitle Missing People List
+      br
+      table#missingPeopleTable.table.table-striped.table-responsive
+         thead
+            th Name
+            th Last Location
+            th Reporter
+            th Status
+         tbody#peopleTable
+            +printPerson(person_list)
+   div.col-md-1

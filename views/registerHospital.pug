@@ -1,0 +1,45 @@
+extends layout
+
+block stylesheet
+  link(href="/css/registerHospital.css", rel="stylesheet")
+  
+block scripts
+  script(src='/lib/jquery/dist/jquery.min.js')
+  script(src='/js/registerHospital.js')
+
+block content
+  div.row
+    div.col-xs-1
+    div.col-xs-10
+      .help-block
+        .input-group
+          input#username.form-control(type='hidden', enabled='false', value=user.username)
+        .input-group
+          input#userType.form-control(type='hidden', enabled='false', value=user.type)
+        .input-group
+          input#requestName.form-control(type='hidden', enabled='false', value=requestName)
+        label Name:
+        .input-group
+          input#hospitalName.form-control(type='text')
+      .help-block
+        label Address:
+        .input-group
+          input#hospitalAddress.form-control(type='text')
+      .help-block
+        label Description:
+        .input-group
+          textarea#hospitalDescription.form-control(rows='5', type='text')
+      .help-block
+        label#nursesLabel
+      .help-block
+        label
+          input#workAtHospital(type='checkbox')
+          |  I work at this hospital's ER
+      
+      span.btn-group
+        .btn.btn-primary(type='button', onclick='submitHospital()')
+          | Submit
+        .btn.btn-primary(type='button', onclick='resetForm()')
+          | Cancel
+        .btn.btn-primary(type='button', onclick='deleteHospital()')
+          | Delete

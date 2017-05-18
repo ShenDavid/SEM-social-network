@@ -1,0 +1,62 @@
+extends layout
+
+block stylesheet
+  link(href='/css/index.css', rel='stylesheet')
+  link(href='/css/patient.css', rel='stylesheet')
+
+block scripts
+  script(src="/js/itemProfile.js")
+
+block content
+  div.col-md-12.col-xs-12
+    div.row(style="padding-top: 10vh;")
+      div.col-md-1.col-xs-1.form-group
+      div.col-md-4.col-xs-4.form-group
+        h5 Name:
+      div.col-md-6.col-xs-6.form-group
+        - if(item)
+          input#itemName.form-control(type="text", value=item.name)
+        - else
+          input#itemName.form-control(type="text")
+    div.row
+      div.col-md-1.col-xs-1.form-group
+      div.col-md-4.col-xs-4.form-group
+        h5 Consumable:
+      div.col-md-4.col-xs-4.form-group(style="margin-top: 6px")
+        - if(item) {
+          label.radio-inline.form-check-label
+            input#consumableYes.form-check-input(type="radio", name="consumable", value="Yes", checked=item.consumable==true)
+            |   Yes
+          label.radio-inline.form-check-label
+            input#consumableNo.form-check-input(type="radio", name="consumable", value="No", checked=item.consumable==false)
+            |   No
+        - } else {
+          label.radio-inline.form-check-label
+            input#consumableYes.form-check-input(type="radio", name="consumable", value="Yes")
+            |   Yes
+          label.radio-inline.form-check-label
+            input#consumableNo.form-check-input(type="radio", name="consumable", value="No", checked=true)
+            |   No
+        - }
+
+block bottomNav
+  div.row(style="text-align:center;")
+    - if(deleteButton) {
+      div.col-md-4.col-xs-4.form-group.patient-button
+        input#submitButton.btn.btn-primary(type="button", value="Submit", onclick="submitItem()")
+      div.col-md-4.col-xs-4.form-group.patient-button
+        input#resetButton.btn.btn-primary(type="button", value="Cancel", onclick="cancelItem()")
+      div.col-md-4.col-xs-4.form-group.patient-button
+        input#deleteButton.btn.btn-primary(type="button", value="Delete", onclick="deleteItem()")
+    - } else {
+      div.col-md-6.col-xs-6.form-group.patient-button
+        input#submitButton.btn.btn-primary(type="button", value="Submit", onclick="submitItem()")
+      div.col-md-6.col-xs-6.form-group.patient-button
+        input#resetButton.btn.btn-primary(type="button", value="Cancel", onclick="cancelItem()")
+    - }
+  div.row(hidden="")
+    - if(item) {
+      p#itemId=item._id
+      p#firechiefName=item.firechiefName
+      p#checkoutBy=item.checkoutBy
+    - }

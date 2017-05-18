@@ -1,0 +1,46 @@
+extends layout
+
+//-print each patient row out
+mixin printPatients(patients)
+  - if(patients) {
+    - for(var j = 0; j < patients.length; j++){
+        tr
+          th(style="padding-left: 1em;")=patients[j].id
+          - if(patients[j].priority == 0)
+            th="E"
+          - else
+            th=patients[j].priority
+          th
+            a.btn.btn-primary(href='/patients/'+patients[j].id, style="float:right; padding-right: 1em;")
+              span.fa.fa-chevron-right
+    - }
+  - }
+      
+//-print each directory, headers depends on user role
+//-8 == paramedic, 9 == nurse
+mixin printDirectory(role, sorted_patients)
+  - var headers;
+  - if(role == 8) headers = ["To Take To ER", "At ER", "Others"];
+  - if(role == 9) headers = ["Beds Requested", "Beds Ready", "Beds Occupied"];
+  - for(var i = 0; i < 3; i++){
+    div.col-md-4
+      .panel.panel-primary
+        .panel-heading
+          h2=headers[i]
+        .panel-body
+          table.table.table-striped.table-responsive
+            tbody
+              - if (sorted_patients){
+                - if(sorted_patients[i]){
+                    +printPatients(sorted_patients[i])
+                - }
+              - }
+  - }
+  
+block stylesheet
+ link(href='/css/index.css', rel='stylesheet')
+
+block content
+  div.container
+    div.row
+      +printDirectory(user.type, patient_list)

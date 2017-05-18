@@ -1,0 +1,164 @@
+body {
+	padding: 0 50px 50px 50px;
+	overflow-x:hidden;
+	/*
+	overflow-y:hidden;
+	*/
+}
+table{ width:100%;}
+
+.mt10{ margin-top: 10px;}
+.fullheightvh{ height: 100vh;}
+.fullheightminus{ height: 85vw;}
+.fullheightpercentage{ height: 100%;}
+.whitefont{color: white;}
+.blackfont{color: black;}
+.btn-logout{ margin-right: 0;}
+.big{ font-size: 25px;}
+.redBackground{background: #e74c3c;}
+.lightBlueBackground{background: #87cefa}
+
+
+.font-bold {
+font-weight: bold;
+}
+
+.user-list-name{
+	color: black;
+	text-align:left;
+	font-family:Arial,sans-serif;
+	font-size: 10px;
+}
+.user-list-height{
+	height: 15px;
+}
+
+.login{
+	text-align: center;
+	font-size: 20px;
+	font-weight: 600;
+}
+.bubble-box{
+	background:#EEE;
+/*	margin-left: 10px;
+	margin-right: 10px;*/
+	margin-bottom: 12px;
+	padding: 10px;
+	color: #666666;
+}
+.bubble-name{
+	text-align:left;
+	font-family:Arial,sans-serif;
+	font-size: 20px;
+}
+.bubble-time{
+	text-align:right;
+	font-family:"Times New Roman",sans-serif;
+	font-size: 15px;
+}
+.bubble-content{
+	text-align:left;
+	font-family:sans-serif;
+	font-size: 15px;
+	word-wrap: break-word;
+}
+.bubble-system{
+	width: 60%;
+	border-radius: 8px;
+	background: #FFCCCC;
+	text-align:center;
+	font-family:"Times New Roman",sans-serif;
+	font-size: 20px;
+	word-wrap: break-word;
+	margin-left: auto;
+	margin-right: auto;
+}
+.msg-bubble{
+	margin-top:7px;
+}
+.msg-list{
+	position: relative;
+	height: 100%;
+	overflow-x:hidden;
+	overflow-y: scroll;
+}
+.msg-input{
+	background: #C5E8F8;
+}
+
+.input-group{
+	float:bottom;
+	margin-left: 15px;
+	margin-right: 15px;
+}
+
+.atBottom{
+	bottom: 5px;
+/*  position: fixed;*/
+/*	width: 100%;*/
+	height: 55px;
+}
+
+.panel-body{
+	height: calc(100vh - 200px);
+	/*width: 90vh;*/
+}
+
+.list-group{
+	height: calc(100vh - 158px);
+	overflow-y: scroll;
+}
+.groupList-group{
+	height: calc(100vh - 158px);
+	overflow-y: scroll;
+}
+
+.list-group-item{
+	-webkit-transition: background 0.5s ease-in-out;
+	-ms-transition:     background 0.5s ease-in-out;
+	transition:         background 0.5s ease-in-out;
+}
+
+.list1-group-item{
+	-webkit-transition: background 0.5s ease-in-out;
+	-ms-transition:     background 0.5s ease-in-out;
+	transition:         background 0.5s ease-in-out;
+}
+
+.groupList-group-item{
+	-webkit-transition: background 0.5s ease-in-out;
+	-ms-transition:     background 0.5s ease-in-out;
+	transition:         background 0.5s ease-in-out;
+}
+
+.messages-list{
+	width: 20vw;
+	/*position: fixed;*/
+}
+.announcement-staytop{
+	height: 12vh;
+	overflow-y: scroll;
+}
+.panel-primary{
+	width: 80vw;
+}
+.hideMe{
+	display: none;
+}
+.yscroll{
+	height: 80vh;
+	overflow-y: scroll;
+}
+.searchscroll{
+	overflow-y: scroll;
+}
+
+.atBottom2{;
+	bottom: 60px;
+	height: 55px;
+}
+
+.attachment-image {
+	max-width: 100%;
+	height: auto;
+}

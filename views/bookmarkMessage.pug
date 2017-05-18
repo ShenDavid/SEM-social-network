@@ -1,0 +1,79 @@
+extends layout
+
+mixin printTitle(receiver)
+  td#receiver.panel-title.big.whitefont=receiver
+
+mixin printMsgs(message_list)
+  - if(message_list.length === 0)
+    p No bookmarked message found
+  each item in message_list
+    .bubble-box
+      table
+        tr
+          td.bubble-name
+            img(src='/images/'+item.currStatus+'.png' style="width:30px; height:30px;")
+            =item.author
+          td.bubble-time=item.postedAt
+      table.msg-bubble
+        tr
+          td.bubble-content(colspan='2')=item.messageData
+          td.bubble-time=item.city
+      table.msg-bubble
+        tr
+          td.bubble-content(colspan='2')
+          td.bubble-time
+            a.btn.btn-primary(onclick='unbookmarkMessage(\'' + item.messageData + '\', \'' + item.author + '\', \'' + item.receiver + '\', \'' + item.postedAt + '\')')
+              span.fa.fa-bookmark(style="color:yellow")
+
+      -if (item.attachment) {
+        -if (item.attachment.attachmentType == 1) {
+          table.msg-bubble
+            tr
+              td.bubble-content
+                span.glyphicon.glyphicon-file
+                a(href=item.attachment.fileUri style="padding:5px")=item.attachment.name
+        -} else if (item.attachment.attachmentType == 2) {
+          table.msg-bubble
+            tr
+              td.bubble-content
+                img.attachment-image(src=item.attachment.fileUri style="width:300px; height:170px;")
+        -} else if (item.attachment.attachmentType == 3) {
+          table.msg-bubble
+            tr
+              td.bubble-content
+                video(width="400" controls)
+                  source(src=item.attachment.fileUri, type="video/mp4")
+        -}
+      -}
+
+  link(href='/css/chat.css', rel='stylesheet')
+  link(href='/css/loader.css', rel='stylesheet')
+  link(href='/css/alerts.css', rel='stylesheet')
+
+block scripts
+  script(src='/js/bookmarkMessage.js')
+
+block content
+ body
+    .media-body
+      div
+        div.panel.panel-primary
+          div.panel-heading
+            table
+              tr
+                - if (receiver){
+                  +printTitle(receiver)
+                - }
+          div.panel-body
+            #msg-list.msg-list
+              - if (message_list){
+                +printMsgs(message_list)
+              - }
+              - else {
+                p No bookmarked message found
+              - }
+              
+    div.atBottom
+      div.input-group.input-group-lg
+        span#author.input-group-addon.blackfont.hidden
+          = username

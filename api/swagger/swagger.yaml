@@ -1,0 +1,212 @@
+#  Run "sudo npm install -g swagger" to install swagger. Make sure this file is in path "{Project path}/api/swagger/". Then run "swagger project edit" to start viewing the documentation in a browser.
+# For references, see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md
+swagger: '2.0'
+info:
+  title: Justice League ESN
+  description: ESN Website
+  version: "0.1.0"
+host: localhost:8080
+# basepath: / (Not sure why this line will cause error)
+schemes:
+  - http
+produces:
+  - application/json
+paths:
+  /users:
+   get:
+    description: |
+     Retrieve all users
+    tags:
+     - Join Community
+    responses:
+     200:
+      description: An array of User
+      schema:
+       type: array
+       items:
+        $ref: '#/definitions/User'
+
+   post:
+    description: |
+     Register a user
+    parameters:
+     - name: username
+       in: query
+       description: Unique username of the user.
+       required: true
+       type: string
+     - name: password
+       in: query
+       description: Password of the user.
+       required: true
+       type: string
+    tags:
+     - Join Community
+    responses:
+     200:
+      description: User exists.
+      schema:
+        type: array
+        items:
+          $ref: '#/definitions/User'
+     201:
+      description: New user is registered.
+     401:
+      description: Password doesn't match.
+      schema:
+        type: array
+        items:
+          $ref: '#/definitions/ErrorList'
+     422:
+      description: Username or password length too short.  Or a banned username.
+      schema:
+        type: array
+        items:
+          $ref: '#/definitions/ErrorList'
+
+  /users/:username:
+   get:
+    description: |
+     Retrieve a user's record
+    parameters:
+     - name: username
+       in: query
+       description: Unique username of the user.
+       required: true
+       type: string
+    tags:
+     - Join Community
+    responses:
+     200:
+      description: User is found.
+      schema:
+       $ref: '#/definitions/User'
+     404:
+      description: User does not exist.
+
+
+  /messages/public:
+   get:
+    description: |
+     The messages/public endpoint returns an array of previous messages.
+    tags:
+     - Chat Publicly
+    responses:
+     200:
+      description: An array of previous messages.
+      schema:
+       type: array
+       items:
+        $ref: '#/definitions/Message'
+   post:
+    description: |
+     Post a public message from a user.
+    parameters:
+     - name: username
+       in: query
+       description: Username of the user.
+       required: true
+       type: string
+     - name: message
+       in: query
+       description: Message body.
+       required: true
+       type: string
+    tags:
+     - Chat Publicly
+    responses:
+     201:
+      description: New message created.
+     404:
+      description: User does not exist.
+
+
+definitions:
+ User:
+  type: object
+  required:
+  - username
+  - password
+  - createdAt
+  - status
+  - type
+  - accountStatus
+  properties:
+   username:
+    type: string
+    description: Unique username of the user.
+   password:
+    type: string
+    description: Password of the user.
+   createdAt:
+    type: string
+    format: date-time
+   updatedAt:
+    type: string
+    format: date-time
+   lastLoginAt:
+    type: string
+    format: date-time
+   status:
+    type: number
+    default: 0
+   type:
+    type: number
+    default: 0
+   accountStatus:
+    type: number
+    default: 0
+ ErrorList:
+  type: object
+  required:
+  - httpCode
+  - usernameLenInvalid
+  - passwordLenInvalid
+  - usernameBanned
+  properties:
+   httpCode:
+    type: number
+    description: HTTP code sent in response.
+   usernameLenInvalid:
+    type: boolean
+    description: True if username is shorter than 3 characters, false otherwise.
+   passwordLenInvalid:
+    type: boolean
+    description: True if password is shorter than 3 characters, false otherwise.
+   usernameBanned:
+    type: boolean
+    description: True if username is a banned username, false otherwise.
+ Message:
+  type: object
+  required:
+  - messageData
+  - author
+  - messageType
+  - receiver
+  - postedAt
+  - currStatus
+  - city
+  - latitude
+  - longitude
+  properties:
+   messageData:
+    type: string
+   author:
+    type: string
+   messageType:
+    type: string
+    default: Wall
+   receiver:
+    type: string
+   postedAt:
+    type: string
+   currStatus:
+    type: string
+    default: Undefined
+   city:
+    type: string
+    default: ""
+   latitude:
+    type: number
+   longitude:
+    type: number

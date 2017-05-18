@@ -1,0 +1,34 @@
+extends layout
+
+block stylesheet
+    link(href='/css/index.css', rel='stylesheet')
+
+block content
+  div.container
+    div.row
+      div.col-md-4
+        .panel.panel-primary
+          .panel-heading
+            h2 Check Out Items
+          .panel-body
+            table.table.table-striped.table-responsive
+              tbody
+                tr
+                  th Name
+                  th
+                  th
+                each item in item_list
+                  tr
+                    td=item.name
+                    td
+                      a.btn.btn-primary(href='/inventory/'+username+'/'+ item._id +'/checkin') Check In
+                    -if(item.consumable)
+                      td
+                        a.btn.btn-primary(href='/inventory/'+username+'/'+ item._id +'/consume') Consumed
+                    -else
+                      td
+                      
+block bottomNav
+  div.row(style="text-align:center;")
+    div.col-md-12.col-xs-12.form-group
+      a.btn.btn-primary(href='/inventory') Back to Manage Inventory

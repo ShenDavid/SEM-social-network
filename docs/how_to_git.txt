@@ -1,0 +1,68 @@
+
+
+//*  To commit *//
+1: git add .
+2: git commit -m "your commit message"
+
+(If you delete a file, do "git add . -A", use the -A flag)
+
+
+//* To Push to Branch *//
+1: Commit your work
+2: git push origin your_branch_name
+
+
+//* Switching branches *//
+1: git checkout branch_name
+
+
+//* Create branch both locally and on remote *//
+1: git checkout -b name_of_your_new_branch
+2: git push origin name_of_your_new_branch
+
+
+//* How to remove a file from repo, that's not local *//
+1: git rm --cached file_name
+
+//* How to remove directory and everything in side it from repo, not local *//
+1: git rm --cached -rm directory
+
+//* MERGE WITH MASTER *//
+1; git checkout your_branch
+2: git pull origin master
+3: git push origin your_branch
+4: git checkout master
+5: git pull origin your_branch
+
+//* Rollback a commit *//
+1: git reset --hard HEAD^
+2: git clean
+
+(git reset: reset working tree back to the last commit)
+(git clean: clean unknown files from working tree)
+
+
+//* Check status *//
+1: git status
+
+(shows new files if you need to add or if you're at head)
+
+
+//* Log your gits *//
+1: git log
+
+(shows a history of commits)
+
+
+//* DELETE BRANCHES LOCALLY *//
+1: git branch -d branch_name
+
+(-d only works if the branch is up to date and merged with master)
+
+//* DELETE THE REMOTE BRANCH *//
+1: git push origin :deleted_branch_name
+
+//* AFTER DELETION CHECK BRANCHES *//
+1: git fetch -p
+
+(-p is for prune, to prune branches that are dead)

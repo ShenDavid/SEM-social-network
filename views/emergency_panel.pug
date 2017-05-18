@@ -1,0 +1,303 @@
+.emergency_panel#emergency_medical
+    h4 Provide patient's medical data
+    if incident.patients
+         each patient, i in incident.patients
+             if (username == incident.commander && user.type % 10 !== 3)
+                 button.btn.btn-xs.btn-primary.pull-right(type="button", onclick='treatPatient(\"'+incident._id+'\", \"/patients/'+encodeURIComponent(patient.id)+'\")') Treat Patient
+             h5
+                 u Patient #{i}:
+             .row.form-row
+                 .col-xs-4
+                     label Name
+                 .col-xs-8
+                     input.form-control(type="text", value=patient.name, readonly=true)
+             .row.form-row
+                 .col-xs-4
+                    label Date of birth
+                 .col-xs-8
+                     input.form-control(type="text", value=patient.dateOfBirth.toLocaleDateString('en-US'), readonly=true)
+             .row.form-row
+                 .col-xs-4
+                     label Age
+                 .col-xs-8
+                     input.form-control(type="text", value=patient.age, readonly=true)
+             .row.form-row
+                 .col-xs-4
+                     label Sex
+                 .col-xs-8
+                     if patient.sex === true
+                         - var sex = "Female"
+                     else if patient.sex === false
+                         - var sex = "Male"
+                     else
+                         - var sex = "Not available"
+                     input.form-control(type="text", value=sex, readonly=true)
+             .row.form-row
+                 .col-xs-4
+                     label Conscious
+                 .col-xs-8
+                     if patient.conscious === true
+                         - var conscious = "Yes"
+                     else if patient.conscious === false
+                         - var conscious = "No"
+                     else
+                         - var conscious = "Not available"
+                     input.form-control(type="text", value=conscious, readonly=true)
+             .row.form-row
+                 .col-xs-4
+                     label Breathing Normally
+                 .col-xs-8
+                     if patient.normalBreathing === true
+                         - var normalBreathing = "Yes"
+                     else if patient.normalBreathing === false
+                         - var normalBreathing = "No"
+                     else
+                         - var normalBreathing = "Not available"
+                     input.form-control(type="text", value=normalBreathing, readonly=true)
+             .row.form-row
+                 .col-xs-4
+                     label Chief Complaint
+                 .col-xs-8
+                     input.form-control(type="text", value=patient.complaint, readonly=true)
+             .row.form-row
+                 .col-xs-4
+                     label Condition
+                 .col-xs-8
+                     - var conditions = ["Allergy", "Asthma", "Bleeding", "Broken bone", "Burn", "Choking", "Concussion", "Heart Attack", "Heat Stroke", "Hypothermia", "Poisoning", "Seizure", "Shock", "Strain/Sprain", "Stroke"];
+                     if patient.condition !== undefined
+                         - var condition = conditions[patient.condition]
+                     else
+                         - var condition = "Not available"
+                     input.form-control(type="text", value=condition, readonly=true)
+             .row.form-row
+                 .col-xs-4
+                     label Drugs
+                 .col-xs-8
+                     input.form-control(type="text", value=patient.drugs, readonly=true)
+             .row.form-row
+                 .col-xs-4
+                     label Allergies
+                 .col-xs-8
+                     input.form-control(type="text", value=patient.allergies, readonly=true)
+    else
+        #patient_form_holder
+        button.btn.btn-primary.pull-right(type="button", onclick="addNewPatientForm()") Add patient
+        #patient_form_template(style="display:none")
+            // this is just a template, will be used by jquery later to facilitate patient.
+            .row.form-row
+                .col-xs-4
+                    label Name
+                .col-xs-8
+                    input.form-control(type="text", name="patients[0][name]")
+            .row.form-row
+                .col-xs-4
+                    label Date of birth
+                .col-xs-8
+                    .input-group.date(data-provide="datepicker")
+                        input.patient-dateOfBirth.form-control(type="text", name="patients[0][dateOfBirth]")
+                        .input-group-addon
+                            span.glyphicon.glyphicon-th
+            .row.form-row
+                .col-xs-4
+                    label Age
+                .col-xs-8
+                    input.form-control(type="text", name="patients[0][age]")
+            .row.form-row
+                .col-xs-4
+                    label Sex
+                .col-xs-8
+                    label.radio-inline
+                        input(type='radio', name='patients[0][sex]', value="No")
+                        | Male
+                    label.radio-inline
+                        input(type='radio', name='patients[0][sex]', value="Yes")
+                        | Female
+            .row.form-row
+                .col-xs-4
+                    label Conscious
+                .col-xs-8
+                    label.radio-inline
+                        input(type='radio', name='patients[0][conscious]', value="Yes")
+                        | Yes
+                    label.radio-inline
+                        input(type='radio', name='patients[0][conscious]', value="No")
+                        | No
+            .row.form-row
+                .col-xs-4
+                    label Breathing Normally
+                .col-xs-8
+                    label.radio-inline
+                        input(type='radio', name='patients[0][normalBreathing]', value="Yes")
+                        | Yes
+                    label.radio-inline
+                        input(type='radio', name='patients[0][normalBreathing]', value="No")
+                        | No
+            .row.form-row
+                .col-xs-4
+                    label(for='complaint') Chief Complaint
+                .col-xs-8
+                    input.form-control(type='text', name="patients[0][complaint]")
+            .row.form-row
+                .col-xs-4
+                    label Condition
+                .col-xs-8
+                    select.form-control(name="patients[0][condition]")
+                        - var conditions = ["Allergy", "Asthma", "Bleeding", "Broken bone", "Burn", "Choking", "Concussion", "Heart Attack", "Heat Stroke", "Hypothermia", "Poisoning", "Seizure", "Shock", "Strain/Sprain", "Stroke"];
+                        each condition, i in conditions
+                            option(value=i) #{condition}
+            .row.form-row
+                .col-xs-4
+                    label Drugs
+                .col-xs-8
+                    input.form-control(type='text', name="patients[0][drugs]")
+            .row.form-row
+                .col-xs-4
+                    label Allergies
+                .col-xs-8
+                    input.form-control(type='text', name="patients[0][allergies]")
+            button.btn.btn-danger(type="button", class="delete_patient") Delete
+            hr
+
+.emergency_panel#emergency_fire
+    h4 Provide fire scene data
+    .row.form-row
+        .col-xs-4
+            label Have you smelled smoke?
+        .col-xs-8
+            label.radio-inline
+                input(type='radio', name='smoke', value='Yes', checked=(incident.smoke=='Yes'))
+                | Yes
+            label.radio-inline
+                input(type='radio', name='smoke', value='No', checked=(incident.smoke=='No'))
+                | No
+    .row.form-row
+        .col-xs-4
+            label(for='smokecolor') Smoke Color
+        .col-xs-8
+            input#smokecolor.form-control(type='text', name="smokecolor", value=incident.smokecolor)
+    .row.form-row
+        .col-xs-4
+            label(for='smokequantity') Smoke Quantity
+        .col-xs-8
+            input#smokequantity.form-control(type='text', name="smokequantity", value=incident.smokequantity)
+    .row.form-row
+        .col-xs-4
+            label Have you seen flame?
+        .col-xs-8
+            label.radio-inline
+                input(type='radio', name='flame', value='Yes', checked=(incident.flame=='Yes'))
+                | Yes
+            label.radio-inline
+                input(type='radio', name='flame', value='No', checked=(incident.flame=='No'))
+                | No
+    .row.form-row
+        .col-xs-4
+            label Are there any injuries?
+        .col-xs-8
+            label.radio-inline
+                input(type='radio', name='injury', value='Yes', checked=(incident.injury=='Yes'))
+                | Yes
+            label.radio-inline
+                input(type='radio', name='injury', value='No', checked=(incident.injury=='No'))
+                | No
+    .row.form-row
+        .col-xs-4
+            label(for='structype') Structure Type
+        .col-xs-8
+            input#structype.form-control(type='text', name="structype", value=incident.structype)
+    .row.form-row
+        .col-xs-4
+            label Are there any hazardous materials?
+        .col-xs-8
+            label.radio-inline
+                input(type='radio', name='hmaterial', value='Yes', checked=(incident.hmaterial=='Yes'))
+                | Yes
+            label.radio-inline
+                input(type='radio', name='hmaterial', value='No', checked=(incident.hmaterial=='No'))
+                | No
+    .row.form-row
+        .col-xs-4
+            label(for='insidePeople') Number of people inside
+        .col-xs-8
+            input#insidePeople.form-control(type='text', name="insidePeople", value=incident.insidePeople)
+    .row.form-row
+        .col-xs-4
+            label Can people get out?
+        .col-xs-8
+            label.radio-inline
+                input(type='radio', name='getout', value='Yes', checked=(incident.getout=='Yes'))
+                | Yes
+            label.radio-inline
+                input(type='radio', name='getout', value='No', checked=(incident.getout=='No'))
+                | No
+
+
+
+
+.emergency_panel#emergency_police
+    h4 Provide police scene data
+    .row.form-row
+        .col-xs-4
+            label Are there any weapons?
+        .col-xs-8
+            label.radio-inline
+                input(type='radio', name='weapon', value='Yes', checked=(incident.weapon=='Yes'))
+                | Yes
+            label.radio-inline
+                input(type='radio', name='weapon', value='No', checked=(incident.weapon=='No'))
+                | No
+    .row.form-row
+        .col-xs-4
+            label Anyone injured?
+        .col-xs-8
+            label.radio-inline
+                input(type='radio', name='injured', value='Yes', checked=(incident.injured=='Yes'))
+                | Yes
+            label.radio-inline
+                input(type='radio', name='injured', value='No', checked=(incident.injured=='No'))
+                | No
+    .row.form-row
+        .col-xs-4
+            label(for='suspect') Suspect descriptions
+        .col-xs-8
+            input#suspect.form-control(type='text', name="suspect", value=incident.suspect)
+    .row.form-row
+        .col-xs-4
+            label(for='vehicle') Suspect vehicle descriptions
+        .col-xs-8
+            input#vehicle.form-control(type='text', name="vehicle", value=incident.vehicle)
+    .row.form-row
+        .col-xs-4
+            label(for='means') Suspect means
+        .col-xs-8
+            input#means.form-control(type='text', name="means", value=incident.means)
+    .row.form-row
+        .col-xs-4
+            label(for='travel') Direction of travel
+        .col-xs-8
+            input#travel.form-control(type='text', name="travel", value=incident.travel)
+    .row.form-row
+        .col-xs-4
+            label Have means left scene?
+        .col-xs-8
+            label.radio-inline
+                input(type='radio', name='left', value='Yes', checked=(incident.left=='Yes'))
+                | Yes
+            label.radio-inline
+                input(type='radio', name='left', value='No', checked=(incident.left=='No'))
+                | No
+    .row.form-row
+        .col-xs-4
+            label Are you safe?
+        .col-xs-8
+            label.radio-inline
+                input(type='radio', name='safe', value='Yes', checked=(incident.safe=='Yes'))
+                | Yes
+            label.radio-inline
+                input(type='radio', name='safe', value='No', checked=(incident.safe=='No'))
+                | No
+    .row.form-row
+        .col-xs-4
+            label(for='detail') Details of crime/situation
+        .col-xs-8
+            input#detail.form-control(type='text', name="detail", value=incident.detail)

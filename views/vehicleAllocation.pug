@@ -1,0 +1,51 @@
+extends layout
+block stylesheet
+  link(rel='stylesheet', href='/css/style.css')
+  link(rel='stylesheet', href='/css/main.css')
+
+block script
+  script(src='https://code.jquery.com/jquery-1.10.2.min.js')
+  script(src='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js')
+  script(src='/script/showModal.js')
+
+block content
+
+  #welcomeModal.modal.fade
+    .modal-dialog
+      .modal-header
+        button.close(type='button', data-dismiss='modal', aria-hidden='true') x
+        h3.modal-title  Welcome!
+      .modal-body
+        p Welcome to the ESN. Here you can find multiple resources which could aid you in your current situation. On this portal, the following icons are used to show the status of any user.
+        table.table
+          tr
+            th.text-center Icon
+            th.text-center Colour
+            th.text-center Status
+            th.text-center Explanation
+          tr
+            td.text-center
+              i.fa.fa-check-circle(style='color: #9ccb19')
+            td.text-center Green
+            td.text-center  OK
+            td.text-center I am OK. I do not need help.
+          tr
+            td.text-center
+              i.fa.fa-exclamation-triangle(style='color: #fcd116')
+            td.text-center  Yellow
+            td.text-center  Help
+            td.text-center I need help, but this is not a life-threatening emergency.
+          tr
+            td.text-center
+              i.fa.fa-plus-square(style='color: #ce4844')
+            td.text-center  Red
+            td.text-center  Emergency
+            td.text-center I need help now, as this is a life threatening emergency!
+          tr
+            td.text-center
+              i.fa.fa-minus
+            td.text-center  Black
+            td.text-center  Undefined
+            td.text-center The user has not provided status yet.
+        br
+        p You can check the Notice tab for important announcements and private messages.

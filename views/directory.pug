@@ -1,0 +1,60 @@
+extends layout
+
+
+mixin printUsers(user_list)
+  each item in user_list
+    
+    tr
+      -if(item.accountStatus==0){
+        td=item.username
+        -if(item.status == 1)
+          td 
+            img.table-img.green(src="/images/status_icon/ok_circle_black.png")
+        - else if (item.status==2)
+          td
+            img.table-img.yellow(src="/images/status_icon/help_triangle_black.png")
+        - else if (item.status==3)
+          td
+            img.table-img.red(src="/images/status_icon/emergency_heart_black.png")
+        - else
+          td Undefined
+          
+        - if(item.lastStatusUpdate)
+          td=item.lastStatusUpdate
+        - else
+          td=item.createdAt
+        
+        -if (item.onlineStatus == 1)
+          td Offline
+        -else
+          td Online
+      -}
+
+block stylesheet
+  link(href='/css/chat.css', rel='stylesheet')
+
+block content
+  #content.st-pusher
+  // sidebar effects INSIDE of st-pusher:
+  // st-effect-3, st-effect-6, st-effect-7, st-effect-8, st-effect-14
+  // this is the wrapper for the content
+  .st-content
+    .page-section
+      .row
+        .col-md-2
+        .col-md-8.yscroll
+          h4.page-section-heading User Directory
+          .panel.panel-default
+          table.table(data-toggle='data-table', cellspacing='10', width='10%', style="text-align:center;")
+            thead
+              tr
+                th(style="text-align:center;") Name
+                th(style="text-align:center;") Status
+                th(style="text-align:center;") Last Status Update
+                th(style="text-align:center;") Online Status
+
+            tbody
+              +printUsers(user_list)
+          
+      
+    

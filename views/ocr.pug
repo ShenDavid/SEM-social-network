@@ -1,0 +1,149 @@
+extends layout
+
+block content
+    body
+        script(src='/dist/tesseract.dev.js')
+        script.
+            function progressUpdate(packet){
+                var log = document.getElementById('log');
+                if(log.firstChild && log.firstChild.status === packet.status){
+                    if('progress' in packet){
+                        var progress = log.firstChild.querySelector('progress')
+                        progress.value = packet.progress
+                    }
+                }else{
+                    var line = document.createElement('div');
+                    line.status = packet.status;
+                    var status = document.createElement('div')
+                    status.className = 'status'
+                    status.appendChild(document.createTextNode(packet.status))
+                    line.appendChild(status)
+                    if('progress' in packet){
+                        var progress = document.createElement('progress')
+                        progress.value = packet.progress
+                        progress.max = 1
+                        line.appendChild(progress)
+                    }
+                    if(packet.status == 'done'){
+                        var pre = document.createElement('pre')
+                        pre.appendChild(document.createTextNode(packet.data.text))
+                        line.innerHTML = ''
+                        line.appendChild(pre)
+                    }
+                    log.insertBefore(line, log.firstChild)
+                }
+            }
+            function recognizeFile(file){
+                document.querySelector("#log").innerHTML = ''
+                Tesseract.recognize(file, {
+                    lang: document.querySelector('#langsel').value
+                })
+                        .progress(function(packet){
+                            console.info(packet)
+                            progressUpdate(packet)
+                        })
+                        .then(function(data){
+                            console.log(data)
+                            progressUpdate({ status: 'done', data: data })
+                        })
+            }
+        select#langsel(onchange='window.lastFile && recognizeFile(window.lastFile)')
+            option(value='afr')  Afrikaans
+            option(value='ara')  Arabic
+            option(value='aze')  Azerbaijani
+            option(value='bel')  Belarusian
+            option(value='ben')  Bengali
+            option(value='bul')  Bulgarian
+            option(value='cat')  Catalan
+            option(value='ces')  Czech
+            option(value='chi_sim')  Chinese
+            option(value='chi_tra')  Traditional Chinese
+            option(value='chr')  Cherokee
+            option(value='dan')  Danish
+            option(value='deu')  German
+            option(value='ell')  Greek
+            option(value='eng', selected='')  English
+            option(value='enm')  English (Old)
+            option(value='meme')  Internet Meme
+            option(value='epo')  Esperanto
+            option(value='epo_alt')  Esperanto alternative
+            option(value='equ')  Math
+            option(value='est')  Estonian
+            option(value='eus')  Basque
+            option(value='fin')  Finnish
+            option(value='fra')  French
+            option(value='frk')  Frankish
+            option(value='frm')  French (Old)
+            option(value='glg')  Galician
+            option(value='grc')  Ancient Greek
+            option(value='heb')  Hebrew
+            option(value='hin')  Hindi
+            option(value='hrv')  Croatian
+            option(value='hun')  Hungarian
+            option(value='ind')  Indonesian
+            option(value='isl')  Icelandic
+            option(value='ita')  Italian
+            option(value='ita_old')  Italian (Old)
+            option(value='jpn')  Japanese
+            option(value='kan')  Kannada
+            option(value='kor')  Korean
+            option(value='lav')  Latvian
+            option(value='lit')  Lithuanian
+            option(value='mal')  Malayalam
+            option(value='mkd')  Macedonian
+            option(value='mlt')  Maltese
+            option(value='msa')  Malay
+            option(value='nld')  Dutch
+            option(value='nor')  Norwegian
+            option(value='pol')  Polish
+            option(value='por')  Portuguese
+            option(value='ron')  Romanian
+            option(value='rus')  Russian
+            option(value='slk')  Slovakian
+            option(value='slv')  Slovenian
+            option(value='spa')  Spanish
+            option(value='spa_old')  Old Spanish
+            option(value='sqi')  Albanian
+            option(value='srp')  Serbian (Latin)
+            option(value='swa')  Swahili
+            option(value='swe')  Swedish
+            option(value='tam')  Tamil
+            option(value='tel')  Telugu
+            option(value='tgl')  Tagalog
+            option(value='tha')  Thai
+            option(value='tur')  Turkish
+            option(value='ukr')  Ukrainian
+            option(value='vie')  Vietnamese
+        input(type='file', onchange='recognizeFile(window.lastFile=this.files[0])')
+        #log
+        style.
+            #log > div {
+                color: #313131;
+                border-top: 1px solid #dadada;
+                padding: 9px;
+                display: flex;
+            }
+            #log > div:first-child {
+                border: 0;
+            }
+            .status {
+                min-width: 250px;
+            }
+            #log {
+                border: 1px solid #dadada;
+                padding: 10px;
+                margin-top: 20px;
+                min-height: 100px;
+            }
+            body {
+                font-family: sans-serif;
+                margin: 30px;
+            }
+            progress {
+                display: block;
+                width: 100%;
+                transition: opacity 0.5s linear;
+            }
+            progress[value="1"] {
+                opacity: 0.5;
+            }

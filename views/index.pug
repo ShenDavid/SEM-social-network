@@ -1,0 +1,154 @@
+extends layout
+
+block stylesheet
+  link(href='/css/chat.css', rel='stylesheet')
+  link(href='/css/index.css', rel='stylesheet')
+
+block scripts
+  script(src="/js/index.js")
+
+block content
+  - //console.log(username);
+  // Modal
+  #vehicleModal.modal.fade(role='dialog')
+    .modal-dialog
+      // Modal content
+      .modal-content
+        .modal-header
+          //button.close(type='button', data-dismiss='modal') ×
+          - if (user.type % 10 === 4)
+            h4.modal-title C.P. #{username}
+          - if (user.type % 10 === 6)
+            h4.modal-title C.F. #{username}
+          - if (user.type % 10 === 5 || user.type % 10 === 7 || user.type % 10 === 8)
+            h4.modal-title #{username}
+        .modal-body
+          h5 Current Vehicle Allocated:
+          h4
+            - if (user.type % 10 === 4 || user.type % 10 === 5)
+              span.fa.fa-taxi#vehicleID
+            - if (user.type % 10 === 6 || user.type % 10 === 7 || user.type % 10 === 8)
+              span.fa.fa-truck#vehicleID
+          br
+
+          .dropdown
+            button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown')
+              | Switch Vehicle
+              span.caret
+            ul.dropdown-menu#vehicleList
+
+        .modal-footer
+          div
+            button.btn.btn-primary#switchVehicle(type='button' style='visibility: hidden') Switch
+            button.btn.btn-primary(type='button' data-dismiss='modal') Stay
+  div
+    div
+      - if (justCreated === 'true') {
+        p Welcome to ESN, #{username}! You can change and share your status in the Share Status Page.
+        a.cancel_icon(href="#", onclick="exitStatusTable()") &#10006;
+        table.table.table-hover.cancel
+          thead
+            tr
+              th Status
+              th Description
+              th Icon
+          tbody
+            tr
+              td
+                h3 OK (Green)
+              td I am OK, I do not need help.
+              td
+                img.green(src="/images/status_icon/ok_circle_black.png")
+            tr
+              td
+                h3 Help (Yellow)
+              td I need help, but this is not a life threatening emergency.
+              td
+                img.yellow(src="/images/status_icon/help_triangle_black.png")
+            tr
+              td
+                h3 Emergency (Red)
+              td I need help now, as this is a life threatening emergency!
+              td
+                img.red(src="/images/status_icon/emergency_heart_black.png")
+            tr
+              td
+                h3 Undefined
+              td The user has not been providing his/her status yet.
+              td NO IMAGE
+      - } else {
+        p1 Welcome back to ESN, #{username}!
+        p2 #{warningUnread}
+      - }
+
+    div
+      if (user.type % 10 === 9)
+        button#PatrolAreas.btn.btn-primary.btn-lg.btn-block(type='button', onclick="location.href='/bedsavailable'")
+          | Beds Available
+        br
+
+      if (user.type % 10 === 0 || user.type % 10 === 1)
+        button#ShareStatus.btn.btn-primary.btn-lg.btn-block(type='button', onclick="location.href='/sharestatus'")
+          | Share Status
+        br
+
+      if (user.type % 10 >= 3 && user.type % 10 <= 8)
+        button#Incidents.btn.btn-primary.btn-lg.btn-block(type='button', onclick="location.href='/incidents'")
+          | Incidents
+        br
+
+      if (user.type % 10 === 8 || user.type % 10 === 9)
+        button#Incidents.btn.btn-primary.btn-lg.btn-block(type='button', onclick="location.href='/patients'")
+          | Patients
+        br
+
+      if (user.type % 10 === 8 || user.type % 10 === 9)
+        button#Incidents.btn.btn-primary.btn-lg.btn-block(type='button', onclick="location.href='#'")
+          | First Aid
+        br
+
+      if (user.type % 10 === 8 || user.type % 10 === 9)
+        button#Incidents.btn.btn-primary.btn-lg.btn-block(type='button', onclick="location.href='#'")
+          | Drugs
+        br
+
+      if (user.type % 10 === 8)
+        button#Incidents.btn.btn-primary.btn-lg.btn-block(type='button', onclick="location.href='/findhospital'")
+          | Find Hospital
+        br
+
+      if (user.type % 10 >= 4 && user.type % 10 <= 7)
+        button#ResourceAllocation.btn.btn-primary.btn-lg.btn-block(type='button', onclick="location.href='/allocateResource'")
+          | Resource Allocation
+        br
+
+      if (user.type % 10 === 6)
+        button#WildfireAreas.btn.btn-primary.btn-lg.btn-block(type='button', onclick="location.href='/wildfireArea'")
+          | Wildfire Areas
+        br
+
+      if (user.type % 10 === 4)
+        button#PatrolAreas.btn.btn-primary.btn-lg.btn-block(type='button', onclick="location.href='/patrolArea'")
+          | Patrol Areas
+        br
+
+      button.btn.btn-primary.btn-lg.btn-block(type='button', onclick="location.href='/connect'")
+        | Connect
+      br
+
+      button.btn.btn-primary.btn-lg.btn-block(type='button', onclick="location.href='/map'")
+        | Map
+      br
+
+      if (user.type % 10 === 6 || user.type % 10 === 7)
+        button#ManageInventory.btn.btn-primary.btn-lg.btn-block(type='button', onclick="location.href='/inventory'")
+          | Manage Inventory
+        br
+
+      button.btn.btn-primary.btn-lg.btn-block(type='button', onclick="location.href='/ocr'")
+        | Ocr
+      br
+
+      if (user.type % 10 === 0 || user.type % 10 === 1)
+        button#911.btn.btn-danger.btn-lg.btn-block(type='button', onclick="location.href='/reach911'")
+          | 911

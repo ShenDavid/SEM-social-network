@@ -1,0 +1,158 @@
+extends layout
+
+mixin printPriorities(selectedPriority)
+    -var priorities = ["E", "1", "2", "3", "4"];
+    -for (var i=0; i<priorities.length; i++) {
+        -if(i == selectedPriority) {
+            option(value=i, selected) #{priorities[i]}
+        -}
+        -else {
+            option(value=i) #{priorities[i]}
+        -}
+    -}
+
+
+mixin printConditions(selectedCondition)
+    -var conditions = ["Allergy", "Asthma", "Bleeding", "Broken bone", "Burn", "Choking", "Concussion", "Heart Attack", "Heat Stroke", "Hypothermia", "Poisoning", "Seizure", "Shock", "Strain/Sprain", "Stroke"];
+    -for (var i=0; i<conditions.length; i++) {
+        -if(i == selectedCondition) {
+            option(value=i, selected) #{conditions[i]}
+        -}
+        -else {
+            option(value=i) #{conditions[i]}
+        -}
+    -}
+
+
+block stylesheet
+    link(href='/css/index.css', rel='stylesheet')
+    link(href='/css/chat.css', rel='stylesheet')
+    link(href='/css/patient.css', rel='stylesheet')
+    link(href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css', rel='stylesheet')
+
+block scripts
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js')
+    script(src='/js/patientProfile.js')
+
+block content
+    div.col-md-12.col-xs-12
+        div.row
+            div.col-md-1.col-xs-1.form-group
+                h5 ID:
+            div.col-md-4.col-xs-4.form-group
+                fieldset(disabled="")
+                    input#patientId.form-control(type="text", value=patient.id)
+            div.col-md-1.col-xs-1
+            div.col-md-3.col-xs-3.form-group
+                h5 Priority:
+            div.col-md-3.col-xs-3.form-group
+                select#priority.form-control.selectpicker
+                    +printPriorities(patient.priority)
+        div.row
+            div.col-md-5.col-xs-5
+                h5 Patient Location:
+            div.col-md-7.col-xs-7
+                ul.list-inline.patient-location-ul
+                   li
+                      input#locationRoad.form-check-input.patient-location(type="radio", name="location", value="0", checked=patient.location==0)
+                      label.radio-inline.form-check-label.patient-location-label(for="locationRoad") Road
+                   li
+                      input#locationER.form-check-input.patient-location(type="radio", name="location", value="1", checked=patient.location==1)
+                      label.radio-inline.form-check-label.patient-location-label(for="locationER") ER
+        div.row
+            div.col-md-12.col-xs-12
+               p
+        div.row
+            div.col-md-2.col-xs-2.form-group
+                h5 Name:
+            div.col-md-10.col-xs-10.form-group
+                input#patientName.form-control(type="text", value=patient.name)
+        div.row
+            div.col-md-2.col-xs-2.form-group
+                h5 DoB:
+            div.col-md-8.col-xs-8.form-group
+                 div.input-group.date(data-provide="datepicker")
+                     input#patientDOB.form-control(type="text")
+                     div.input-group-addon
+                         span.glyphicon.glyphicon-th
+        div.row
+            div.col-md-2.col-xs-2.form-group
+                h5 Age:
+            div.col-md-4.col-xs-4.form-group
+                fieldset(disabled="")
+                    input#patientAge.form-control(type="text", value=patient.age)
+        div.row
+            div.col-md-2.col-xs-2
+                h5 Sex:
+            div.col-md-10.col-xs-10.form-check
+                label.radio-inline.form-check-label
+                    input#female.form-check-input(type="radio", name="sex", value="female", checked=patient.sex==true)
+                    |   Female
+                label.radio-inline.form-check-label
+                    input#male.form-check-input(type="radio", name="sex", value="female", checked=patient.sex==false)
+                    |   Male
+        div.row
+            div.col-md-3.col-xs-3
+                h5 Conscious:
+            div.col-md-9.col-xs-9.form-check
+                label.radio-inline.form-check-label
+                    input#consciousYes.form-check-input(type="radio", name="conscious", value="Yes", checked=patient.conscious==true)
+                    |   Yes
+                label.radio-inline.form-check-label
+                    input#consciousNo.form-check-input(type="radio", name="conscious", value="No", checked=patient.conscious==false)
+                    |   No
+        div.row
+            div.col-md-5.col-xs-5
+                h5 Breathing Normally:
+            div.col-md-7.col-xs-7.form-check
+                label.radio-inline.form-check-label
+                    input#breathYes.form-check-input(type="radio", name="breathingNormally", value="Yes", checked=patient.normalBreathing==true)
+                    |   Yes
+                label.radio-inline.form-check-label
+                    input#breathNo.form-check-input(type="radio", name="breathingNormally", value="No", checked=patient.normalBreathing==false)
+                    |   No
+        div.row
+            div.col-md-12.col-xs-12.form-group
+                h5 Chief Complaint:
+        div.row
+            div.col-md-12.col-xs-12.form-group
+                textarea#complaints.form-control(rows="3")=patient.complaint
+        div.row
+            div.col-md-3.col-xs-3.form-group
+                h5 Condition:
+            div.col-md-4.col-xs-4.form-group
+                select#condition.form-control
+                    +printConditions(patient.condition)
+        div.row
+            div.col-md-3.col-xs-3.form-group
+                h5 Drugs:
+            div.col-md-9.col-xs-9.form-group
+                textarea#drugs.form-control(rows="3")=patient.drugs
+        div.row
+            div.col-md-3.col-xs-3.form-group
+                h5 Allergies:
+            div.col-md-9.col-xs-9.form-group
+                textarea#allergies.form-control(rows="3")=patient.allergies
+
+        -if(((user.type % 10) === 8) && ((patient.priority===0)||(patient.priority===1))) {
+            div.row
+                div.col-md-12.col-xs-12.form-group
+                    h4 Hospital: #{patient.hospitalName}
+                    input#findHospitalButton.btn.btn-primary.findHospitalButton(type="button", value="Find Hospital", onclick="redirectToFindHospital()")
+        -}
+
+block bottomNav
+   div.row
+      div.col-md-4.col-xs-4.form-group.patient-button
+         input#submitButton.btn.btn-primary(type="button", value="Submit", onclick="updatePatient()")
+      div.col-md-4.col-xs-4.form-group.patient-button
+         input#resetButton.btn.btn-primary(type="button", value="Cancel", onclick="cancelPatient()")
+      div.col-md-4.col-xs-4.form-group.patient-button
+         input#deleteButton.btn.btn-primary(type="button", value="Delete", onclick="checkDeletePatient()")
+   div.row(hidden="")
+      p#dateOfBirth #{patient.dateOfBirthString}
+      p#incidentId #{patient.incidentId}
+      p#hospitalName #{patient.hospitalName}
+      p#hasBed #{patient.hasBed}
+      p#location #{patient.location}

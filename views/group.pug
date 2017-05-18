@@ -1,0 +1,97 @@
+extends layout
+
+mixin printGroupMember()
+    ul.list-group#groupMembers
+        each member in members
+            li.list-group-item(id=member.groupMember) #{member.groupMember}
+                if (user.username == group.groupOwner && user.username != member.groupMember)
+                    a.pull-right.btn.btn-xs.btn-primary(type="button", onclick = 'removeMemberFromGroup(\"'+member.groupMember+'\")') -
+                else if (user.username != group.groupOwner && user.username == member.groupMember)
+                    a.pull-right.btn.btn-xs.btn-primary(type="button", onclick = 'removeMeFromGroup(\"'+user.username+'\", \"'+member.groupName+'\")') -
+
+mixin printAllUsers()
+    ul.list-group#allUsers
+        each user in allUsers
+            li.list-group-item(id=user.username) #{user.username}
+                a.pull-right.btn.btn-xs.btn-primary(type="button", onclick = 'addMemberToGroup(\"'+user.username+'\")') +
+
+mixin printAllGroups()
+    ul.list-group#allGroups
+        each group in allGroups
+            li.list-group-item(id= type + "_" + group.groupName) #{group.groupName}
+                a.pull-right.btn.btn-xs.btn-primary(type="button", onclick = 'addGroupToGroup(\"'+group.groupName+'\")') +
+
+block stylesheet
+    link(href='/css/group.css', rel='stylesheet')
+
+block content
+    div.container
+        h5#invalidInput.text-warning
+
+        if (user.username == group.groupOwner)
+            div.row
+                div.col-md-2.col-xs-3
+                    label(for='groupName') Name
+                div.col-md-10.col-xs-9
+                    input#groupName.form-control(type='text', placeholder='e.g. Fire', value=group.groupName)
+            div.row
+                div.col-md-2.col-xs-3
+                    label(for='groupDescription') Description
+                div.col-md-10.col-xs-9
+                    textarea#groupDescription.form-control(rows=3,
+                    placeholder='e.g. For people affected by wildfire.',
+                    value=group.groupDescription)
+        else
+            div.row.form-group
+                div.col-md-2.col-xs-3
+                    strong Name
+                div.col-md-10.col-xs-9
+                    p= group.groupName
+            div.row
+                div.col-md-2.col-xs-3
+                    strong Description
+                div.col-md-10.col-xs-9
+                    p= group.groupDescription
+        div.row
+            div.col-md-2.col-xs-3
+                strong Owner
+            div.col-md-10.col-xs-9
+                p= group.groupOwner
+
+        div.row
+            if (user.username == group.groupOwner)
+                div.col-md-6.col-xs-6
+                    .panel.panel-primary
+                        .panel-heading Contacts to be added
+                        .panel-body
+                            +printAllUsers()
+                    .panel.panel-primary
+                        .panel-heading Groups to be added
+                        .panel-body
+                            +printAllGroups()
+            div.col-md-6.col-xs-6
+                .panel.panel-primary
+                    .panel-heading This Group
+                    .panel-body
+                         +printGroupMember()
+
+block bottomNav
+    div.row
+        .btn-group.btn-group-justified(role="group", aria-label="Group actions")
+            if (user.username == group.groupOwner)
+                .btn-group(role="group")
+                    if (action == "new")
+                        button.btn.btn-primary(role='button', onclick='createGroup()') Submit
+                    else if (action == "update")
+                        button.btn.btn-primary(type='button', onclick='updateGroup(\"'+group.groupName+'\")') Update
+                .btn-group(role="group")
+                    a.btn.btn-default(role='button', href='/groups') Cancel
+                if (action == "update")
+                    .btn-group(role="group")
+                        button.btn.btn-danger(role="button", onclick='deleteGroup(\"'+group.groupName+'\")') Delete
+            else
+                .btn-group(role="group")
+                    a.btn.btn-primary(type='button', href='/groups') Back to Groups
+
+block footscripts
+    script(src='/js/group.js')

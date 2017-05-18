@@ -1,0 +1,160 @@
+extends layout
+
+block stylesheet
+    link(href='/css/incident.css', rel='stylesheet')
+
+block content
+    div.container
+        form#incident_form
+            if incident._id
+                p
+                    strong Opened at: #{incident.opening_datetime}
+                if incident.state == "Closed"
+                    p
+                        strong Closed at: #{incident.closing_datetime}
+                input.form-control#_id(name="_id", type="hidden", value=incident._id, readonly=true)
+                .row.form-row
+                    .col-xs-2
+                        label(for='id') ID
+                    .col-xs-10
+                        input.form-control#id(type='text', name="id" value=incident.incidentId, disabled=true)
+                if incident.creator
+                    .row.form-row
+                        .col-xs-3
+                            label(for='creator') Creator
+                        .col-xs-9
+                            input.form-control#creator(type='text', name="creator", value=incident.creator, disabled=true)
+                else
+                    .row.form-row
+                        .col-xs-3
+                            label(for='caller') Caller
+                        .col-xs-9
+                            input.form-control#caller(type='text', name="caller", value=incident.caller, disabled=true)
+                    .row.form-row
+                        .col-xs-3
+                            label(for='dispatcher') Dispatcher
+                        .col-xs-9
+                            input.form-control#dispatcher(type='text', name="dispatcher", value=incident.dispatcher, disabled=true)
+                .row.form-row
+                    .col-xs-3
+                        label(for='commander') Commander
+                    .col-xs-9
+                        input.form-control#commander(type='text', name="commander", value=incident.commander||incident.dispatcher, disabled=true)
+            else
+                - var now = new Date();
+                p
+                    strong Opened at: #{now.toDateString() + " " + now.toTimeString()}
+                input.form-control#opening_datetime(type="hidden", name="opening_datetime", value=now.toDateString() + " " + now.toTimeString(), readonly=true)
+
+                .row.form-row
+                    .col-xs-2
+                        label(for='id') ID
+                    .col-xs-10
+                        input.form-control#id(type='text', name="id", value=incident.incidentId, readonly=true)
+                .row.form-row
+                    .col-xs-3
+                        label(for='creator') Creator
+                    .col-xs-9
+                        input.form-control#creator.form-control(type='text', name="creator", value=username, readonly=true)
+                .row.form-row
+                    .col-xs-3
+                        label(for='commander') Commander
+                    .col-xs-9
+                        input.form-control#commander.form-control(type='text', name="commander", value=username, readonly=true)
+
+            .row.form-row
+                .col-xs-3
+                    label(for='address') Address
+                .col-xs-9
+                    .input-group
+                        input.form-control#address.form-control(type='text', name="address", value=incident.address)
+                        span.input-group-btn
+                            button.btn.ben-secondary(type="button" onclick="showAddress()") Lookup map
+
+            .row.form-row
+                .col-xs-12
+                    #map
+
+            .row.form-row
+                .col-xs-3
+                    label(for='type') Type
+                .col-xs-9
+                    input.form-control#type(type='hidden', name="type", value=incident.type, readonly=true)
+                    button.btn.btn-primary(type='button', onclick='setEmergency("Fire")') Fire
+                    span.btn-split
+                    button.btn.btn-primary(type='button', onclick='setEmergency("Medical")') Medical
+                    span.btn-split
+                    button.btn.btn-primary(type='button', onclick='setEmergency("Police")') Police
+
+            .panel.panel-default
+                .panel-body
+                    include emergency_panel
+
+            .row.form-row
+                .col-xs-4
+                    label(for="priority") Incident Priority
+                .col-xs-8
+                    select.form-control#priority(name="priority")
+                        option(value="E" selected=(incident.priority=="E")) E
+                        option(value="1" selected=(incident.priority == "1")) 1
+                        option(value="2" selected=(incident.priority == "2")) 2
+                        option(value="3" selected=(incident.priority == "3")) 3
+
+        if incident.state === "Closed"
+            a.btn.btn-primary.btn-lg.btn-block(type='button', href='/incidents') Back to Incidents
+        else
+            if incident._id
+                if (username == incident.commander)
+                    button.btn.btn-primary.btn-lg.btn-block(type='button', data-toggle="modal", data-target="#transferCommandModal") Transfer Command
+                    button.btn.btn-primary.btn-lg.btn-block(type='button', onclick='closeIncident(\"'+incident.id+'\")') Close Incident
+                    if (user.type % 10 !== 3)
+                        button.btn.btn-primary.btn-lg.btn-block(type='button', onclick='allocateResource(\"' + incident.id + '\")') Allocate Resource
+                // a.btn.btn-primary.btn-lg.btn-block(type='button', href='/messages/groups/'+group_name) Responder Chat
+                hr
+            .btn-group.btn-group-justified(role="group")
+                a.btn.btn-default(type='button', href='/incidents') Cancel
+                a.btn.btn-primary(type='button', onclick='createOrUpdateIncident()') Submit
+
+    #transferCommandModal.modal.fade(tabindex='-1', role='dialog')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title Transfer command to an available chief
+                .modal-body
+                    if availableChiefs.length == 0
+                        p Sorry, no available chief
+                    else
+                        each availableChief in availableChiefs
+                            .radio.radio-primary
+                                input(type='radio', name='availableChief', id='chief-'+availableChief.username, value=availableChief.username)
+                                label(for='chief-'+availableChief.username)
+                                    | #{availableChief.username}
+
+                .modal-footer
+                    button.btn.btn-default(type='button', data-dismiss='modal') Close
+                    button.btn.btn-primary(type='button', onclick='transferCommand(\"'+incident._id+'\")') Submit
+            // /.modal-content
+        // /.modal-dialog
+    // /.modal
+
+
+block footscripts
+    script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyA3a46LuMhZij5MQW2SMsEmma4Sg0GOBFY', type='text/javascript')
+    script(src='/lib/gmaps/gmaps.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js')
+    script(src='/js/incident.js')
+
+    if (incident.type == "Police")
+        script.
+            setEmergency("Police")
+    else if (incident.type == "Medical")
+        script.
+            setEmergency("Medical")
+    else if (incident.type == "Fire")
+        script.
+            setEmergency("Fire")
+    else
+        script.
+            setEmergency("Fire")

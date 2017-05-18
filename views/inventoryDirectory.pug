@@ -1,0 +1,45 @@
+extends layout
+
+block stylesheet
+ link(href='/css/index.css', rel='stylesheet')
+
+block scripts
+  script(src="/js/itemProfile.js")
+
+block content
+  div.container
+    div.row
+      div.col-md-12.col-xs-12
+        .panel.panel-primary
+          .panel-heading
+            h2 Inventory
+          .panel-body
+            div.table-responsive
+              table.table.table-striped
+                thead
+                  tr
+                    th Name
+                    th Consumable
+                    th
+                    th
+                tbody
+                  each item in item_list
+                    tr#item.id
+                      td=item.name
+                      -if(item.consumable)
+                        td Yes
+                      -else
+                        td No
+                      td
+                        a.btn.btn-primary.btn-xs(onclick="checkoutItem('"+item.id+"')") Check Out
+                      td
+                        a.btn.btn-primary.btn-xs(href="/item/"+item.id) Edit
+
+block bottomNav
+  div.row
+    div.col-md-4.col-xs-4.form-group
+    div.col-md-4.col-xs-4.form-group
+      a.btn.btn-primary(href='/inventory/'+username) My Inventory
+    div.col-md-4.col-xs-4.form-group
+      a.btn.btn-primary(href="/addItem", style="float:right; margin-right: 5vw;")
+        span.fa.fa-plus

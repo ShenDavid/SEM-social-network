@@ -1,0 +1,25 @@
+body{
+  overflow-y: scroll;
+}
+
+.crumb-list{
+	position: relative;
+  padding-top: 10px;
+  width: 70%;
+  margin-left: 15%;
+  marrgin-right:15%;
+}
+
+.crumb-list th {
+  text-align:center;
+}
+
+.crumb-list td {
+  text-align:center;
+}
+
+@media screen and (min-width: 768px){
+  .crumb-list td {
+    width: 45vw;
+  }
+}

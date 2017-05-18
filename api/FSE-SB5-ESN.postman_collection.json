@@ -1,0 +1,387 @@
+{
+	"variables": [],
+	"info": {
+		"name": "FSE-SB5-ESN",
+		"_postman_id": "732d6731-8c66-b53f-e8c4-5618a4d3e20e",
+		"description": "FSE TEAM SB5 API Collection\n\nTest our ESN server's API.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/messages",
+			"description": "",
+			"item": [
+				{
+					"name": "GET /messages",
+					"request": {
+						"url": "{{url}}/messages/public",
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": "\n200 returns an array of previous messages."
+					},
+					"response": []
+				},
+				{
+					"name": "POST /messages",
+					"request": {
+						"url": "{{url}}/messages/public",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"messageData\": \"Hodor, hodor!\",\n\t\"author\": \"Hodor\",\n\t\"receiver\": \"PM\",\n\t\"postedAt\": \"2016-10-04 20:26\",\n\t\"messageType\": 0,\n\t\"longitude\": null,\n\t\"latitude\": null,\n\t\"city\": \"Mountain View\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET /messages/private/:author/:receiver",
+					"request": {
+						"url": "{{url}}/messages/private/Hodor/darren",
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": ":author = username of the author of private message\n:receiver = username of receiver of private message\n\n200: list of all messages between the two"
+					},
+					"response": []
+				},
+				{
+					"name": "POST /messages/private",
+					"request": {
+						"url": "{{url}}/messages/private",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"messageData\": \"Hodor, hodor!\",\n\t\"author\": \"Hodor\",\n\t\"receiver\": \"darren\",\n\t\"postedAt\": \"2016-10-04 20:26\",\n\t\"messageType\": 0,\n\t\"longitude\": null,\n\t\"latitude\": null,\n\t\"city\": \"Mountain View\"\n}"
+						},
+						"description": "edit the body data to decide who the author and receiver is\n\n201: created a new private message to someone"
+					},
+					"response": []
+				},
+				{
+					"name": "GET /messages/announcements",
+					"request": {
+						"url": "{{url}}/messages/announcements",
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": "\n200: get list of all announcements"
+					},
+					"response": []
+				},
+				{
+					"name": "POST /messages/announcements",
+					"request": {
+						"url": "{{url}}/messages/announcements",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"annData\" : \"This is an Announcement\",\r\n\t\"author\" : \"hodor\",\r\n\t\"postedAt\" : \"2016-10-04 20:26\",\r\n\t\"latitude\" : null,\r\n\t\"longitude\" : null,\r\n\t\"city\" : \"Mountain View\"\r\n}"
+						},
+						"description": "create an announcement\n201: announcement created"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/missingPeople",
+			"description": "",
+			"item": [
+				{
+					"name": "GET /missingPeople",
+					"request": {
+						"url": "{{url}}/missingPeople",
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": "\nGet a list of All Missing People"
+					},
+					"response": []
+				},
+				{
+					"name": "POST /missingPeople/:reporter",
+					"request": {
+						"url": "{{url}}/missingPeople/praj",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"firstName\": \"John\",\n\t\"lastName\": \"Smith\",\n\t\"age\": \"20\",\n\t\"location\": \"Santa Cruz\",\n\t\"relationship\": \"Friend\"\n}"
+						},
+						"description": "\nAdd a new Missing People"
+					},
+					"response": []
+				},
+				{
+					"name": "POST /missingPeople/changeStatus/:foundByUser",
+					"request": {
+						"url": "{{url}}/missingPeople/changeStatus/praj",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"personId\": \"abc\"\n}"
+						},
+						"description": "\nReport a missing person found"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/search",
+			"description": "",
+			"item": [
+				{
+					"name": "{{url}}/search",
+					"request": {
+						"url": "{{url}}/search?username=hodor&keyword=hodor",
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": "/search\r\n\r\nuses url queries\r\n/search?keyword=\"search_terms\" \r\n\r\nto get more data /search?keyword=\"search_terms\"&more=\"type\"&lastTime=URL%ENCODED%DATE\r\n\r\ntypes include:\r\n\"public\" => for public messages\r\n\"private\" => for private messages\r\n\"ann\" => for announcements"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/users",
+			"description": "",
+			"item": [
+				{
+					"name": "GET /users",
+					"request": {
+						"url": "{{url}}/users",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic SG9kb3I6SG9kb3I=",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": "Retrieve all users.\n\nReturns a 200 ok with an array of users."
+					},
+					"response": []
+				},
+				{
+					"name": "POST /users",
+					"request": {
+						"url": "{{url}}/users",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"hodor\",\n\t\"password\": \"hodor\",\n\t\"isCreated\": \"false\"\n}"
+						},
+						"description": "Create a new user.\n\n200: user exists, return username.\n201: new user has been registered.\n401: password doesn't match.\n422: username or password length is too short, or a banned username was used.\n\nJSON FORM TO USE\n{\n\t\"username\": \"Hodor\",\n\t\"password\": \"Hodor\",\n\t\"isCreated\": \"false\"\n}"
+					},
+					"response": []
+				},
+				{
+					"name": "GET /users/:username",
+					"request": {
+						"url": "{{url}}/users/hodor",
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": "\nChange :username  to the username you want to check.\n\n200: reply with a user object"
+					},
+					"response": []
+				},
+				{
+					"name": "POST new username /users/:username",
+					"request": {
+						"url": "{{url}}/users/hodor",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"rekt\",\n\t\"newUsername\": \"rekt\"\n}"
+						},
+						"description": "\nUpdate username."
+					},
+					"response": []
+				},
+				{
+					"name": "POST new password /users/:username",
+					"request": {
+						"url": "{{url}}/users/hodor",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"hodor\",\n\t\"newPassword\": \"hodor\"\n}"
+						},
+						"description": "\nUpdate password."
+					},
+					"response": []
+				},
+				{
+					"name": "POST new privilege /users/:username",
+					"request": {
+						"url": "{{url}}/users/hodor",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"hodor\",\n\t\"newPrivilege\": \"1\"\n}"
+						},
+						"description": "\nUpdate privilege."
+					},
+					"response": []
+				},
+				{
+					"name": "POST activate /users/:username",
+					"request": {
+						"url": "{{url}}/users/hodor",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"hodor\",\n\t\"wantActivate\": \"1\"\n}"
+						},
+						"description": "\nActivate user."
+					},
+					"response": []
+				},
+				{
+					"name": "POST deactivate /users/:username",
+					"request": {
+						"url": "{{url}}/users/hodor",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"hodor\",\n\t\"wantDeactivate\": \"1\"\n}"
+						},
+						"description": "\nDeactivate user."
+					},
+					"response": []
+				},
+				{
+					"name": "GET /users/:username/statuscrumbs",
+					"request": {
+						"url": "{{url}}/users/hodor/statuscrumbs",
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": "\nSwap :username with the username you want to get.\n\n200: got :username's statuscrumbs successfully"
+					},
+					"response": []
+				},
+				{
+					"name": "POST /users/:username/status/:statusCode",
+					"request": {
+						"url": "{{url}}/users/hodor/status/2",
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": "\n:username = username you want to change status code of\n:statusCode = 0, 1, 2, or 3\n\n201: status of the user has been updated successfully (returns the new statusCode)"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,9 @@
+{
+	"name": "ESN-F16-SB5",
+	"version": "0.0.1",
+	"dependencies": {
+		"jquery": "latest",
+		"crypto-js": "latest",
+		"gmaps" : "latest"
+	}
+}

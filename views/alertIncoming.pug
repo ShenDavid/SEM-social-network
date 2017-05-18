@@ -1,0 +1,21 @@
+extends layout
+
+block stylesheet
+  link(href='/css/alerts.css', rel='stylesheet')
+
+block scripts
+  script(src='/js/sendAlerts.js')
+
+block content
+  div.col-md-12.incomingAlert(onclick="returnToGroupDiscussion(\""+groupName+"\")", class!=alertClass)
+    case alertClass
+      when "alertMenuCell1" : h1.incomingAlertText VACATE
+      when "alertMenuCell2" : h1.incomingAlertText RESCUE in Progress
+      when "alertMenuCell3" : h1.incomingAlertText ALL CLEAR
+      when "alertMenuCell4" : h1.incomingAlertText LIFE HAZ.
+      when "alertMenuCell5" : h1.incomingAlertText P.A.R.
+      when "alertMenuCell6" : h1.incomingAlertText UTILITIES ON
+      when "alertMenuCell7" : h1.incomingAlertText VERT. VENT
+      when "alertMenuCell8" : h1.incomingAlertText CROSS VENT
+      when "alertMenuCell9" : h1.incomingAlertText UTILITIES OFF
+      when "alertMenuCell10" : h1.incomingAlertText MAYDAY!

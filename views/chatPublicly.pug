@@ -1,0 +1,219 @@
+extends layout
+
+mixin printTitle(receiver)
+  td#receiver.panel-title.big.whitefont=receiver
+
+mixin printMsgs(message_list)
+  each item in message_list
+    - var content = item.messageData;
+    - var reveiver = item.reveiver;
+    - var name = item.author;
+    - var status = item.currStatus;
+    - var time = item.postedAt;
+    - var city = item.city;
+    - var latitude = item.latitude;
+    - var longitude = item.longitude;
+    - var attachment = item.attachment;
+    .bubble-box
+      table
+        tr
+          td.bubble-name
+            img(src='/images/'+item.currStatus+'.png' style="width:30px; height:30px;")
+            =item.author
+          td.bubble-time=item.postedAt
+      table.msg-bubble
+        tr
+          td.bubble-content(colspan='2')=item.messageData
+          td.bubble-time=item.city
+        tr
+          td.bubble-content(colspan='2')
+          td.bubble-time
+            - if (item.bookmarked)
+              a.btn.btn-primary(onclick='unbookmarkMessage(\'' + content + '\', \'' + name + '\', \'' + receiver + '\', \'' + time + '\')')
+                span.fa.fa-bookmark(style="color:yellow")
+            - else
+              a.btn.btn-primary(onclick='bookmarkMessage(\'' + content + '\', \'' + name + '\', \'' + receiver + '\', \'' + status + '\', \'' + time + '\', \'' + city + '\', \'' + latitude + '\', \''  + longitude + '\', \'' + attachment + '\')')
+                span.fa.fa-bookmark(style="color:white")
+
+      -if (item.attachment) {
+        -if (item.attachment.attachmentType == 1) {
+          table.msg-bubble
+            tr
+              td.bubble-content
+                span.glyphicon.glyphicon-file
+                a(href=item.attachment.fileUri style="padding:5px")=item.attachment.name
+        -} else if (item.attachment.attachmentType == 2) {
+          table.msg-bubble
+            tr
+              td.bubble-content
+                img.attachment-image(src=item.attachment.fileUri style="width:300px; height:170px;")
+        -} else if (item.attachment.attachmentType == 3) {
+          table.msg-bubble
+            tr
+              td.bubble-content
+                video(width="400" controls)
+                  source(src=item.attachment.fileUri, type="video/mp4")
+        -}
+      -}
+
+mixin printUserList(author, user_list)
+    each item in user_list
+        li.list-group-item.userItem
+          a(href='/messages/private/'+author+'/'+item)
+            .media.user-list-height
+              .media-left
+                -if (item.type % 10 === 3)
+                  span.user.user-list-name D.#{item.username}
+                -else if (item.type % 10 === 4)
+                  span.user.user-list-name CP.#{item.username}
+                -else if (item.type % 10 === 5)
+                  span.user.user-list-name P.#{item.username}
+                -else if (item.type % 10 === 6)
+                  span.user.user-list-name CF.#{item.username}
+                -else if (item.type % 10 === 7)
+                  span.user.user-list-name F.#{item.username}
+                -else if (item.type % 10 === 8)
+                  span.user.user-list-name M.#{item.username}
+                -else if (item.type % 10 === 9)
+                  span.user.user-list-name N.#{item.username}
+                -else
+                  span.user.user-list-name #{item.username}
+
+mixin printGroupList(user_list)
+    each item in user_list
+        li.list-group-item.groupItem
+          a(href='/messages/groups/'+item.groupName)
+            .media.user-list-height
+              .media-left
+                span.user.user-list-name=item.groupName
+
+mixin alertMenuCell(text, groupName)
+    td.alertMenuCell(class!=attributes.class)
+      h4(onclick="sendAlert(\""+groupName+"\",\""+attributes.class+"\")")=text
+
+block stylesheet
+  link(href='/css/chat.css', rel='stylesheet')
+  link(href='/css/loader.css', rel='stylesheet')
+  link(href='/css/alerts.css', rel='stylesheet')
+
+block scripts
+  script(src='/js/publicMsg.js')
+  script(src='/js/sendAlerts.js')
+
+block content
+ body
+  .media
+    //- .media-clearfix-xs-min.media-grid
+    .media-left
+      .messages-list
+        .panel.panel-default
+          ul.list-group
+            li.list-group-item.lightBlueBackground
+              .media.user-list-height
+                .media-left
+                  span.user.user-list-name Groups
+                  span#chatlist.hideMe=chatlist
+            - if(grouplist){
+              +printGroupList(grouplist)
+            -}
+            li.list-group-item.lightBlueBackground
+              .media.user-list-height
+                .media-left
+                  span.user.user-list-name Contacts
+                  span#chatlist.hideMe=chatlist
+            - if (user_list){
+              +printUserList(author, user_list)
+            -}
+            
+    .media-body
+      div
+        div.panel.panel-primary
+          div.panel-heading
+            table
+              tr
+                - if (receiver){
+                  +printTitle(receiver)
+                - }
+                //- td.panel-title.big.whitefont Messages
+          div.panel-body
+            #msg-list.msg-list
+              - if (message_list){
+                +printMsgs(message_list)
+              -}
+      div
+        #myModal.modal.fade(role='dialog')
+          .modal-dialog
+            // Modal content
+            .modal-content
+              .modal-header
+                button.close(type='button', data-dismiss='modal') ×
+                h4.modal-title Alert
+              .modal-body
+                p You have a new message
+              .modal-footer#modalFooter
+                button.btn.btn-default(type='button', data-dismiss='modal') Close
+                #goBtn.button.btn.btn-default(type='button', data-dismiss='modal') Go See
+
+    div#attachment-ui.atBottom2
+      div.input-group.input-group-lg
+        span.input-group-btn
+          label.btn.btn-primary.btn-file
+            span.glyphicon.glyphicon-book
+            input#upload-input(type='file', name='uploads', multiple='multiple' style="display: none;")
+          label.btn.btn-primary.btn-file
+            span.glyphicon.glyphicon-picture
+            input#upload-input2(type='file', name='uploadsimg' multiple='multiple' style='display: none;' accept='image/*')
+          label.btn.btn-primary.btn-file
+            span.glyphicon.glyphicon-film
+            input#upload-input3(type='file', name='uploadsvideo' multiple='multiple' style='display: none;' accept='video/*')
+
+    div#loadingDiv
+      div.loader
+
+    div#alertDiv.atBottom
+      div.input-group.input-group-lg
+              button.btn.btn-danger(data-toggle="modal", data-target="#alertMenu")
+                | Send Alert
+              div.modal.fade#alertMenu(tabindex="-1", role="dialog", aria-labelledby="alertMenuBody", aria-hidden="true",style="top:40%;")
+                div.modal-dialog(role="document", style="width:96%;")
+                  div.modal-content
+                    div.modal-body
+                      div.container-fluid
+                        table.table
+                          tbody
+                            tr
+                              +alertMenuCell('VACATE', receiver )(class="alertMenuCell1")
+                              +alertMenuCell('RESCUE in Progress', receiver)(class="alertMenuCell2")
+                              +alertMenuCell('ALL CLEAR', receiver)(class="alertMenuCell3")
+                            tr
+                              +alertMenuCell('LIFE HAZ.', receiver)(class="alertMenuCell4")
+                              +alertMenuCell('P.A.R.', receiver)(class="alertMenuCell5")
+                              +alertMenuCell('UTILITIES ON', receiver)(class="alertMenuCell6")
+                            tr
+                              +alertMenuCell('VERT. VENT', receiver)(class="alertMenuCell7")
+                              +alertMenuCell('CROSS VENT', receiver)(class="alertMenuCell8")
+                              +alertMenuCell('UTILITIES OFF', receiver)(class="alertMenuCell9")
+                        table.table
+                          tbody
+                            tr
+                              +alertMenuCell('MAYDAY', receiver)(class="alertMenuCell10")
+                              
+
+    div.atBottom
+      div.input-group.input-group-lg
+        span#author.input-group-addon.blackfont.hidden
+          = author
+        span.input-group-btn
+          button.btn.btn-primary.btn-lg(type='button', onclick='toggleOptionButtons()')
+            span.glyphicon.glyphicon-paperclip
+        span.input-group-btn
+          a.btn.btn-primary.btn-lg(type='button', href='/messages/bookmark')
+            span.fa.fa-star
+        span.input-group-btn
+          script(type='text/javascript' src='/js/speechRecognizer.js')
+          button.btn.btn-primary.btn-lg(type='button', onclick='startConverting("chatPublicPage");')
+            span.fa.fa-microphone
+        input#msgIn.form-control.msg-input(type='text', placeholder='Put message here', onkeydown='enterSend(event)')
+        span.input-group-btn
+          button#sendMsg.btn.btn-primary.btn-lg(type='button', onclick='verifyMsg()')
+            | Send

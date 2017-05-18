@@ -1,0 +1,29 @@
+.emergency_panel
+{
+    display: none;
+}
+
+.form-row
+{
+    margin-bottom: 5px;
+}
+
+.form-row label
+{
+    margin-top: 7px !important; /* align with input element */
+}
+
+.btn-split
+{
+    margin-left: 10px;
+}
+
+#map {
+    display: block;
+    width: auto;
+    height: 350px;
+    margin-right: 30px;
+    -moz-box-shadow: 0px 5px 20px #ccc;
+    -webkit-box-shadow: 0px 5px 20px #ccc;
+    box-shadow: 0px 5px 20px #ccc;
+}

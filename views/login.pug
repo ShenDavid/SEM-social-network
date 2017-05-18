@@ -1,0 +1,32 @@
+doctype html
+html.hide-sidebar.ls-bottom-footer(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    meta(name='description', content='')
+    meta(name='author', content='')
+    title ESN
+    link(href='/css/vendor/all.css', rel='stylesheet')
+    link(href='/css/app/app.css', rel='stylesheet')
+    script(src='/js/login.js')
+    script(src='/lib/jquery/dist/jquery.min.js')
+    script(src='/lib/crypto-js/crypto-js.js')
+  body.login
+    #content
+      .container-fluid
+        .lock-container
+          h1 Emergency Social Network
+          -if(deactivate==1)
+            h4 Your account has been deactivated.
+          -else
+            h1 Account Access
+          #login_panel.panel.panel-default.text-center
+            #login_form.panel-body
+              h7#username_error
+              input#username.form-control(type='text', placeholder='Username')
+              h7#password_error
+              input#password.form-control(type='password', placeholder='Enter Password')
+              a#loginButton.btn.btn-primary(onclick='verify()', rel=salt)
+                | Login 
+                i.fa.fa-fw.fa-unlock-alt

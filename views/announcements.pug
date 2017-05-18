@@ -1,0 +1,64 @@
+extends layout
+
+block stylesheet
+  link(href='/css/chat.css', rel='stylesheet')
+  link(href='/css/index.css', rel='stylesheet')
+
+block scripts
+  script(src="/js/announcements.js")
+
+mixin printAnnouncements(announcements_list)
+  each item in announcements_list
+    - var dd1 = new Date(item.postedAt);
+    - var n = dd1.toISOString();
+    - var nonlyDate = n.slice(0,10);
+    - var nonlyTime = n.slice(11,16);
+    - var newDate = nonlyDate +" "+ nonlyTime;
+    - var annData = item.annData;
+    - var author = item.author;
+    - var pinned = item.pin;
+    div.bubble-box
+      table
+        tr
+          td.bubble-name
+            =item.author
+          td.bubble-time=newDate
+      table.msg-bubble
+        tr
+          td.bubble-content(colspan='2')=item.annData
+          td.bubble-time=item.city
+        tr
+          td.bubble-content(colspan='2')
+          td.bubble-time
+            - if (pinned)
+              a.btn.btn-primary(onclick='unpinAnnouncement(\'' + annData + '\', \'' + author + '\')')
+                span.fa.fa-thumb-tack(style="color:yellow")
+            - else
+              a.btn.btn-primary(onclick='pinAnnouncement(\'' + annData + '\', \'' + author + '\')')
+                span.fa.fa-thumb-tack(style="color:white")
+              
+block content
+  div
+    div
+      div.announcements
+        - if(justCreated === 'true')
+          div#msg-list.msg-list(style={height:'30vh'})
+            - if(announcement_list)
+              +printAnnouncements(announcement_list)
+        - else
+          div#msg-list.msg-list(style={height:'70vh'})
+            - if(announcement_list)
+              +printAnnouncements(announcement_list)
+
+    - if (user.type === 1 || user.type === 4 || user.type === 6 ||user.type >= 10) {
+      div.atBottom
+        div.input-group.input-group-lg
+          span#username.input-group-addon.blackfont(style="display:none")
+            = username
+          span#userType.input-group-addon.blackfont(style="display:none")
+            = user.type
+          input#msgIn.form-control.msg-input(type='text', placeholder='Put message here', onkeydown='enterSend(event)')
+          span.input-group-btn
+            button.btn.btn-primary.btn-lg(type='button', onclick='verifyMsg()')
+              | Send
+    - }

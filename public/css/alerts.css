@@ -1,0 +1,67 @@
+.incomingAlert{
+	width: 100%;
+	height: 100%;
+	position: fixed;
+}
+
+.incomingAlertText{
+	position: relative;
+	top: 40%;
+	transform: translateY(-50%);
+	text-align: center;
+}
+
+.alertMenuCell{
+	vertical-align: middle;
+	text-align: center;
+}
+
+.alertMenuCell1{
+	background-color: #e10000;
+	color: white;
+}
+
+.alertMenuCell2{
+	background-color: #ff80bf;
+	color: white;
+}
+
+.alertMenuCell3{
+	background-color: #99ffff;
+	color: black;
+}
+
+.alertMenuCell4{
+	background-color: #c653c6;
+	color: white;
+}
+
+.alertMenuCell5{
+	background-color: #008000;
+	color: white;
+}
+
+.alertMenuCell6{
+	background-color: #cccc00;
+	color: black;
+}
+
+.alertMenuCell7{
+	background-color: #1aa3ff;
+	color: white;
+}
+
+.alertMenuCell8{
+	background-color: #80aaff;
+	color: black;
+}
+
+.alertMenuCell9{
+	background-color: #820000;
+	color: white;
+}
+
+.alertMenuCell10{
+	background-color: #ff3300;
+	color: black;
+}

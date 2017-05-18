@@ -1,0 +1,55 @@
+extends layout
+
+mixin printGroup(group_list)
+    if (group_list)
+        each group in group_list
+            tr(data-group=group.groupName)
+                td #{group.groupName}
+                td
+                    a.btn.btn-primary(href='/group/'+group.groupName+'', title="View")
+                        span.fa.fa-cog
+                td
+                    a.btn.btn-primary(href='/messages/groups/' + group.groupName + '', title="Discussion")
+                        span.fa.fa-chevron-right
+
+block stylesheet
+    link(href='/css/group.css', rel='stylesheet')
+
+block content
+    div.container
+        div.row
+            div.col-md-6
+                .panel.panel-primary
+                    .panel-heading
+                        h2 Groups that I manage
+                    .panel-body
+                        table.table.table-striped.table-responsive
+                            thead
+                                th Name
+                                th
+                                th
+                            tbody#manageGroupTable
+                                +printGroup(manage_group_list)
+            div.col-md-6
+                .panel.panel-primary
+                    .panel-heading
+                        h2 Groups that I belong to
+                    .panel-body
+                        table.table.table-striped.table-responsive
+                            thead
+                                th Name
+                                th
+                                th
+                            tbody#belongToGroupTable
+                                +printGroup(belong_to_group_list)
+
+block bottomNav
+    div.container
+        div.row
+            div.col-md-12
+                div.pull-right
+                    a.btn.btn-primary(href="/group")
+                        span.glyphicon.glyphicon-plus
+
+block footscripts
+    script(src='/js/group.js')

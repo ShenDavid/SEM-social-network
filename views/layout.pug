@@ -1,0 +1,50 @@
+doctype html
+html.st-layout.ls-top-navbar.ls-bottom-footer.show-sidebar.sidebar-l2(lang='en')
+	head
+		block head
+			block title
+				title SB-5 Emergency Social Network
+			block meta
+				meta(charset='utf-8')
+				meta(name='viewport' content='width=device-width, initial-scale=1.0')
+				meta(http-equiv='X-UA-Compatible', content="IE-edge")
+				meta(name='description', content='FSE Project for team SB-5')
+				meta(name='keywords', content='')
+
+				link(href='/css/notify.css')
+				link(href='/css/vendor/all.css', rel='stylesheet')
+				link(href='/css/app/app.css', rel='stylesheet')
+				link(href='/css/status.css', rel='stylesheet')
+				link(href='/css/layout.css', rel='stylesheet')
+
+			block stylesheet
+
+			script(src='/lib/jquery/dist/jquery.min.js')
+
+			//script(src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js")
+			script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
+			script(src="https://use.fontawesome.com/e725058132.js")
+			script(src='https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js')
+			script(src='/js/socket.io.js')
+			script.
+				var username = "#{username}";
+				var user = !{JSON.stringify(user)};
+				var userType = user.type;
+				var socket = io();
+			script(src='/js/notify.js')
+
+			block scripts
+			block globalscripts
+	body
+		include header
+		
+		if(requiresBottomNav)
+			div.body-content-with-bottom-nav
+				block content
+			div.bottom-nav
+				block bottomNav
+		else
+			div.body-content-full
+				block content
+
+		block footscripts

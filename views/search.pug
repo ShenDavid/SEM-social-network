@@ -1,0 +1,241 @@
+extends layout
+
+mixin printMsgs(message_list)
+  each item in message_list
+    .bubble-box
+      table
+        tr
+          td.bubble-name
+            img(src='/images/'+item.currStatus+'.png' style="width:30px; height:30px;")
+            =item.author
+          td.bubble-time=item.postedAt
+      table.msg-bubble
+        tr
+          td.bubble-content(colspan='2')=item.messageData
+          td.bubble-time=item.city
+
+
+mixin printPerson(missing_person_list)
+   -if(missing_person_list) {
+      //console.log("There are missing ppl")
+      each person in missing_person_list
+         - //console.log(person);
+
+         tr(id=person._id)
+            td(id="name"+person._id) #{person.firstName} #{person.lastName} (#{person.age})
+            td(id="location"+person._id) #{person.location}
+            td(id="reporter"+person._id) #{person.reporter} (#{person.relationship})
+            td(id="status"+person._id)
+               -if(person.status == "Missing") {
+               p Missing
+               button.btn-success.btn-xs(id="found"+person._id, title='Click if Found', onclick="reportFound('"+person._id+"')") Found?
+               -}
+               -else {
+               p Found by&nbsp;
+                  a(id="chatWith"+person.foundBy, href="/messages/private/"+username+"/"+person.foundBy, title="Chat with "+person.foundBy) #{person.foundBy}
+               -}
+   -}
+
+mixin printLastAnnTime(message_list)
+  - var len = Object.keys(message_list).length;
+  - if(len>=1)
+    span#lastAnnTime.hideMe=message_list[len-1].postedAt
+
+mixin printLastPublicMsgTime(message_list)
+  - var len = Object.keys(message_list).length;
+  - if(len>=1)
+    span#lastPublicTime.hideMe=message_list[len-1].postedAt
+
+mixin printLastPrivateMsgTime(message_list)
+  - var len = Object.keys(message_list).length;
+  - if(len>=1)
+    span#lastPrivateTime.hideMe=message_list[len-1].postedAt
+
+mixin printAnnouncements(announcements_list)
+  each item in announcements_list
+    - var dd1 = new Date(item.postedAt);
+    - var n = dd1.toISOString();
+    - var nonlyDate = n.slice(0,10);
+    - var nonlyTime = n.slice(11,16);
+    - var newDate = nonlyDate +" "+ nonlyTime;
+    div.bubble-box
+      table
+        tr
+          td.bubble-name
+            =item.author
+          td.bubble-time=newDate
+      table.msg-bubble
+        tr
+          td.bubble-content(colspan='2')=item.annData
+          td.bubble-time=item.city
+
+mixin printUsers(user_list)
+  each item in user_list
+    - //console.log(item);
+    tr
+      td=item.username
+      -if(item.status == 1)
+        td
+          img.table-img.green(src="/images/status_icon/ok_circle_black.png")
+      - else if (item.status==2)
+        td
+          img.table-img.yellow(src="/images/status_icon/help_triangle_black.png")
+      - else if (item.status==3)
+        td
+          img.table-img.red(src="/images/status_icon/emergency_heart_black.png")
+      - else
+        td Undefined
+
+      - if(item.lastStatusUpdate)
+        td=item.lastStatusUpdate
+      - else
+        td=item.createdAt
+
+      -if (item.onlineStatus == 1)
+        td Offline
+      -else
+        td Online
+
+mixin printGroups(group_list)
+  each item in group_list
+    - //console.log(item);
+    tr
+      td=item.groupName
+
+
+block stylesheet
+  link(href='/css/chat.css', rel='stylesheet')
+  link(href='/css/index.css', rel='stylesheet')
+  link(href='/css/link.css', rel='stylesheet')
+
+block scripts
+  script(src='/js/search.js')
+
+block content
+  .search-1
+        .input-group
+          input#searchbox.form-control(type='text', placeholder='Search here.')
+          span.input-group-btn
+            button.btn.btn-primary(type='button', onclick='doSearch()') Search
+  br
+  -//#content.st-pusher
+  .media-body
+    span#keyword.hideMe=keyword
+
+    - if (!status_list && !announcement_list && !message_list && !message_list2 && !person_list && !contact_list && !((group_list1 && group_list1.length > 0) || (group_list2 && group_list2.length > 0))){
+    <p>No Matching Results</p>
+    -}
+
+    div
+      - if(contact_list) {
+      div.panel.panel-primary(style="width: 100vw;")
+        div.panel-heading
+          table
+            tr
+              td.panel-title.big.whitefont Matching Contact
+          table.table(data-toggle='data-table', cellspacing='10', width='10%', style="text-align:center;")
+            thead
+              tr
+                th(style="text-align:center;") Name
+                th(style="text-align:center;") Status
+                th(style="text-align:center;") Last Status Update
+                th(style="text-align:center;") Online Status
+            tbody
+              +printUsers(contact_list)
+      -}
+    div
+      - if (status_list){
+      div.panel.panel-primary(style="width: 100vw;")
+        div.panel-heading
+          table
+            tr
+              td.panel-title.big.whitefont Matching Status
+          table.table(data-toggle='data-table', cellspacing='10', width='10%', style="text-align:center;")
+            thead
+              tr
+                th(style="text-align:center;") Name
+                th(style="text-align:center;") Status
+                th(style="text-align:center;") Last Status Update
+                th(style="text-align:center;") Online Status
+            tbody
+              +printUsers(status_list)
+      -}
+    div
+      - if(announcement_list) {
+        div.panel.panel-primary(style="width: 100vw;")
+          div.panel-heading
+            table
+              tr
+                td.panel-title.big.whitefont Matching Announcements
+                - if(announcement_list)
+                  +printLastAnnTime(announcement_list)
+                td
+                  a.btn.btn-danger.pull-right(type='button', onclick='loadMoreAnn()') More
+
+          div.panel-body.announcements
+            #ann-list.msg-list
+              +printAnnouncements(announcement_list)
+      -}
+    div
+      - if (message_list) {
+      div.panel.panel-primary(style="width: 100vw;")
+        div.panel-heading
+          table
+            tr
+              td.panel-title.big.whitefont Matching Public Chats
+              - if (message_list)
+                +printLastPublicMsgTime(message_list)
+              td
+                a.btn.btn-danger.pull-right(type='button', onclick='loadMorePublic()') More
+        div.panel-body
+          #msg-list.msg-list
+            +printMsgs(message_list)
+      -}
+    div
+      - if (message_list2) {
+        div.panel.panel-primary(style="width: 100vw;")
+          div.panel-heading
+            table
+              tr
+                td.panel-title.big.whitefont Matching Private Chats
+                - if (message_list2)
+                  +printLastPrivateMsgTime(message_list2)
+                td
+                  a.btn.btn-danger.pull-right(type='button', onclick='loadMorePrivate()') More
+          div.panel-body
+            #msg-list2.msg-list
+              +printMsgs(message_list2)
+      -}
+    div
+      - if (person_list){
+      div.panel.panel-primary(style="width: 100vw;")
+        div.panel-heading
+          table
+            tr
+              td.panel-title.big.whitefont Matching Missing People
+          table.table(data-toggle='data-table', cellspacing='10', width='10%', style="text-align:center;")
+            thead
+              tr
+                th(style="text-align:center;") Name(age)
+                th(style="text-align:center;") Last Location
+                th(style="text-align:center;") Reporter
+                th(style="text-align:center;") Status
+            tbody
+              +printPerson(person_list)
+      -}
+    -//search refactoring
+    div
+      - if((group_list1 && group_list1.length > 0) || (group_list2 && group_list2.length > 0)) {
+      div.panel.panel-primary(style="width: 100vw;")
+        div.panel-heading
+          table
+            tr
+              td.panel-title.big.whitefont Matching Groups
+          table.table(data-toggle='data-table', cellspacing='10', width='10%', style="text-align:center;")
+            thead
+              tr
+                th(style="text-align:center;") Group Name
+            tbody
+              +printGroups(group_list1)
+              +printGroups(group_list2)
+      -}

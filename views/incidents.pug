@@ -1,0 +1,34 @@
+extends layout
+
+block stylesheet
+    link(href='/css/incident.css', rel='stylesheet')
+
+block content
+    div.container
+        div.row
+            each incident_category in incident_categories
+                div.col-md-4
+                    .panel.panel-primary
+                        .panel-heading
+                            h2 #{incident_category.title}
+                        .panel-body
+                            table.table.table-striped.table-responsive
+                                tbody
+                                    each incident in incident_category.records
+                                        tr
+                                            th #{incident.caller || incident.creator}
+                                            th #{incident.date}
+                                            th #{incident.type[0].toUpperCase()}
+                                            th #{incident.priority || "E"}
+                                            th
+                                                a.btn.btn-primary(href='/incident/'+incident._id)
+                                                    span.fa.fa-chevron-right
+
+        div.row
+            div.col-md-12
+                div.pull-right
+                    a.btn.btn-default(href="/incident")
+                        span.glyphicon.glyphicon-plus
+
+block footscripts
+    script(src='/js/incident.js')

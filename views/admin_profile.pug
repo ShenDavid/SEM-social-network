@@ -1,0 +1,104 @@
+extends layout
+
+mixin printUserSelect(user_list)
+  - for(var i = 0; i < user_list.length; i++){
+    li
+      a(onclick='changeUser('+i+')')
+        =user_list[i].username
+  - }
+
+block stylesheet
+  link(href="/css/profile.css", rel="stylesheet")
+  
+block scripts
+  script(src='/js/profile.js')
+  script(src='/lib/jquery/dist/jquery.min.js')
+  script(src='/lib/crypto-js/crypto-js.js')
+  script.
+    var user_list = !{JSON.stringify(user_list)};
+
+block content
+  div.row
+    div.col-xs-1
+    div.col-xs-10
+      h2#userinfo #{user.username}
+      - if (user.type == 1)
+      
+        div.dropdown
+          button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown')
+            | Select a user's profile you want to change
+            span.caret
+          ul.dropdown-menu
+            +printUserSelect(user_list)
+      
+      .help-block
+      
+        label#usrLabel Username: #{user.username}
+        .input-group
+          input#newUsername.form-control(type='text', placeholder='Update name here')
+          .input-group-btn
+            .btn.btn-primary(type='button', onclick='updateName()')
+              | Update
+        
+      .help-block
+        
+        - if (user.accountStatus === 0)
+          label#acctStatus Account Status: Active
+          .btn.btn-primary.btn-sm(type='button', onclick='deactivateUser()', style="position: absolute; right: 15px;")
+            | Deactivate
+        - else
+          label#acctStatus Account Status: Inactive
+          .btn.btn-primary.btn-sm(type='button', onclick='activateUser()', style="position: absolute; right: 15px;")
+            | Activate
+        
+        .help-block
+        
+        - if (user.type % 10 === 0)
+          label#privilege Privilege: Citizen
+        - else if (user.type === 1)
+          label#privilege Privilege: Administrator
+        - else if (user.type % 10 === 3)
+          label#privilege Privilege: Dispatcher
+        - else if (user.type % 10 === 4)
+          label#privilege Privilege: Police Chief
+        - else if (user.type % 10 === 5)
+          label#privilege Privilege: Patrol Officer
+        - else if (user.type % 10 === 6)
+          label#privilege Privilege: Fire Chief
+        - else if (user.type % 10 === 7)
+          label#privilege Privilege: Firefighter
+        - else if (user.type % 10 === 8)
+          label#privilege Privilege: Paramedic
+        - else if (user.type % 10 === 9)
+          label#privilege Privilege: Nurse
+          
+        .input-group
+          select#priSel.form-control(onchange='checkCoordinator()')
+            option(hidden='') Select new privilege here
+            option Citizen
+            option Administrator
+            option Dispatcher
+            option Police Chief
+            option Patrol Officer
+            option Fire Chief
+            option Firefighter
+            option Paramedic
+            option Nurse
+          
+        label#coordinatorLabel(hidden=(user.type === 1))
+          input#isCoordinator(type="checkbox", name="isCoordinator", checked=(user.type >= 10))
+          | Coordinator Added Privilege
+          
+        span.input-group-btn
+          .btn.btn-primary(type='button', onclick='updatePrivilege()')
+            | Update
+                
+        .help-block
+        
+        label#pwdLabel Password:
+        .input-group
+          input#newPwd.form-control(type='text', placeholder='Update password here')
+          .input-group-btn
+            a#pwdBtn.btn.btn-primary(type='button', onclick='updatePassword()', rel=salt)
+              | Update
+              i.fa.fa-fw.fa-unlock-alt

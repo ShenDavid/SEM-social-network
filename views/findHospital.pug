@@ -1,0 +1,90 @@
+extends layout
+
+mixin printHospital(hospitals_list)
+    - if(hospitals_list) {
+    - for(var hosp = 0; hosp < hospitals_list.length; hosp++){
+        tr
+        - var allowdrop = hospitals_list[hosp].beds > 0 ? " ui-droppable" : ""
+            td=hospitals_list[hosp].hospital_name
+            - var beds = hospitals_list[hosp].beds > 0 ? hospitals_list[hosp].beds : "?"
+            td=beds
+            td.media-left
+
+                ul(id = "hospital"+hosp, class = "list-group ui-widget-header" + allowdrop + " hospitalclass")='drag here:'
+
+    - }
+    - }
+
+mixin printTable(hospitals_list)
+    div.container
+        div.row
+            div.col-md-4
+                .panel.panel-primary
+                    .panel-heading
+                        h2 Hospital Beds Available
+                    .panel-body
+                        table.table.table-striped.table-responsive(id = "assignTable",data-toggle='data-table')
+                            thead
+                                tr
+                                    th hospital name
+                                    th beds left
+                                    th patients
+                            tbody
+                                 +printHospital(hospitals_list)
+
+mixin printPatients(patient_list)
+    - if(patient_list) {
+        - for(var patient_index = 0; patient_index < patient_list.length; patient_index++){
+            - var name = patient_list[patient_index].patient_name
+            - var id =  patient_list[patient_index].patient_id
+            li.list-group-item.groupItem(id = "patient" + id, draggable='true',class = "ui-widget-header ui-draggable patientclass")
+                .media.user-list-height
+                    .media-left
+                        span.user.user-list-name
+                            p #{name}
+        - }
+        - }
+
+
+
+block stylesheet
+    link(href="/css/registerHospital.css", rel="stylesheet")
+    link(href="/css/findhospital.css", rel="stylesheet" )
+
+
+
+
+block scripts
+    script(src='/lib/jquery/dist/jquery.min.js')
+    script(src='http://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js')
+    script( src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.2/jquery.ui.touch-punch.min.js')
+    script(src='/js/findHospital.js')
+
+
+block content
+    body
+        h7#error
+        .media
+            .media-left
+                .messages-list
+                    .panel.panel-default
+                        ul.list-group#patientsdiv( class = "ui-widget-header ui-droppable" )
+                            li.list-group-item.lightBlueBackground
+                                .media.user-list-height
+                                    .media-left
+                                        span.user.user-list-name Patients
+                            - if (patient_list){
+                            +printPatients(patient_list)
+                            -}
+            .media-body
+                - if (hospitals_list){
+                    +printTable(hospitals_list)
+                -}
+
+block bottomNav
+    div.row
+        .btn-group.btn-group-justified
+            .btn-group
+                button.btn.btn-primary(role='button', onclick='submit()') Submit
+            .btn-group
+                a.btn.btn-default(role='button', onclick='resetForm()') Cancel

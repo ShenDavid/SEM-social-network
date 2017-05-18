@@ -1,0 +1,36 @@
+extends layout
+
+block stylesheet
+  link(href='/css/chat.css', rel='stylesheet')
+  link(href='/css/index.css', rel='stylesheet')
+  
+block scripts
+  script(src="/js/connect.js")
+
+block content
+  div
+    div
+      button.btn.btn-primary.btn-lg.btn-block(type='button', onclick="location.href='/messages/public/'")
+        | Messages
+      br
+
+      button.btn.btn-primary.btn-lg.btn-block(type='button', onclick="location.href='/contacts'")
+        | Contacts
+      br
+
+      button.btn.btn-primary.btn-lg.btn-block(type='button', onclick="location.href='/groups'")
+        | Groups
+      br
+
+      button.btn.btn-primary.btn-lg.btn-block(type='button', onclick="location.href='/missingPeople'")
+        | Missing People
+      br
+
+      button.btn.btn-primary.btn-lg.btn-block(type='button', onclick="location.href='/messages/announcements'")
+        | Announcements
+      br
+
+      - if (user.type % 10 > 3 && user.type % 10 < 9)
+        button.btn.btn-primary.btn-lg.btn-block(type='button', onclick="location.href='/allocateResource'")
+          | Allocate Resource
+        br

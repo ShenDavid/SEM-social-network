@@ -1,0 +1,40 @@
+input[type=number]::-webkit-inner-spin-button {
+    opacity: 1
+}
+
+.lightBlueBackground{background: #87cefa}
+
+.viewOrganizationChart {
+    height: 90vh;
+    overflow-y: scroll;
+}
+
+.media-body {
+    height: 90vh;
+    /*overflow-y: scroll;*/
+}
+
+.organizationChart {
+    /*height: calc(100vh - 120px);*/
+    height: 80vh;
+    overflow-y: scroll;
+}
+
+.Bottom {
+    height: 10vh;
+    width: 100vw;
+    overflow-y: scroll;
+}
+
+
+.action-button {
+    text-align: center;
+}
+
+.footer{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:60px;
+    background: grey;
+}

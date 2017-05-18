@@ -1,0 +1,72 @@
+extends layout
+
+block stylesheet
+
+block scripts
+  script(src="/js/contact.js")
+
+block content
+  div.container
+    div.row
+      div.col-md-4
+        .panel.panel-primary
+          .panel-heading
+            h2 Contact
+          .panel-body
+            table.table.table-striped.table-responsive
+              thead
+                tr
+                  th Name
+                  -if (user.type == 0) {
+                    th Status
+                  -}
+                  th Last Status Update
+                  th Online Status
+                  th
+              tbody
+                each item in contact_list
+                  tr
+                    -if(item.accountStatus==0){
+                      -if (item.type % 10 === 3)
+                        td D. #{item.username}
+                      -else if (item.type % 10 === 4)
+                        td CP. #{item.username}
+                      -else if (item.type % 10 === 5)
+                        td P. #{item.username}
+                      -else if (item.type % 10 === 6)
+                        td CF. #{item.username}
+                      -else if (item.type % 10 === 7)
+                        td F. #{item.username}
+                      -else if (item.type % 10 === 8)
+                        td M. #{item.username}
+                      -else if (item.type % 10 === 9)
+                        td N. #{item.username}
+                      -else
+                        td #{item.username}
+
+                    -if(user.type == 0)
+                      -if(item.status == 1)
+                        td
+                          img.table-img.green(src="/images/status_icon/ok_circle_black.png")
+                      - else if (item.status==2)
+                        td
+                          img.table-img.yellow(src="/images/status_icon/help_triangle_black.png")
+                      - else if (item.status==3)
+                        td
+                          img.table-img.red(src="/images/status_icon/emergency_heart_black.png")
+                      - else
+                        td
+                    - if(item.lastStatusUpdate)
+                      td=item.lastStatusUpdate
+                    - else
+                      td=item.createdAt
+
+                    -if (item.onlineStatus == 1)
+                      td Online
+                    -else
+                      td Offline
+
+                    td
+                      a.btn.btn-primary(href='/messages/private/' + username + '/' + item.username)
+                        span.fa.fa-chevron-right
+                    -}

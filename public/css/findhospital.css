@@ -1,0 +1,48 @@
+body{
+    padding: 0 50px 50px 50px;
+    overflow-x:hidden;
+    overflow-y: scroll;
+}
+
+.crumb-list{
+    position: relative;
+    padding-top: 10px;
+    width: 70%;
+    margin-left: 15%;
+    margin-right:15%;
+}
+
+.crumb-list th {
+    text-align:center;
+}
+
+.crumb-list td {
+    text-align:center;
+}
+
+.crumb-list td.media-left {
+    text-align:left;
+}
+
+@media screen and (min-width: 768px){
+    .crumb-list td {
+        width: 45vw;
+    }
+
+}
+
+div.ui-menu li {
+    list-style:none;
+    background-image:none;
+    background-repeat:none;
+    background-position:0;
+    font-weight:bold;
+}
+
+p {
+    font-size: large;
+}
+
+.patientclass {
+    margin-left: 15%;
+}

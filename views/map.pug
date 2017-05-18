@@ -1,0 +1,116 @@
+extends layout
+
+mixin printUserList(author, user_list)
+  each item in user_list
+      li.list-group-item
+        a(onclick='showContacts('+ '"' + item + '"' +')')
+          .media.user-list-height
+            .media-left
+              span.user.user-list-name=item
+
+mixin printGroupList(group_list)
+    each item in group_list
+        li.list-group-item
+            a(onclick='showMembers('+ '"' + item + '"' +')')
+                .media.user-list-height
+                    .media-left
+                        span.user.user-list-name=item
+
+block stylesheet
+    link(href='/css/map.css', rel='stylesheet')
+
+block scripts
+    script.
+        contacts="#{user_list}";
+        groups="#{group_list}";
+        pin_Data="#{JSON.stringify(pins)}";
+        userInMap="#{JSON.stringify(user)}";
+
+    script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyA3a46LuMhZij5MQW2SMsEmma4Sg0GOBFY', type='text/javascript')
+    script(src='/lib/gmaps/gmaps.js')
+    script(src='/js/map.js')
+
+
+block content
+    body
+        #myModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel')
+            .modal-dialog(role='document')
+                .modal-content
+                  .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                      span(aria-hidden='true') &times;
+                    h4#exampleModalLabel.modal-title Add a pin
+                  .modal-body
+                      form
+                      .form-group
+                        label.control-label(for='message-text') Description:
+                        textarea#message-text.form-control
+                      .btn-group(data-toggle='buttons')
+                          label.btn.btn-primary.active
+                              input#pin_opt(type='radio', name='options', autocomplete='off', checked='')
+                              |  Pin
+                          |
+                          label#road_block.btn.btn-primary
+                              input#road_block_opt(type='radio', name='options', autocomplete='off')
+                              |  Road Block
+                  .modal-footer
+                    button.btn.btn-default(type='button', data-dismiss='modal') Close
+                    |
+                    button#success_marker.btn.btn-primary(type='button', data-dismiss='modal') Save
+        .media
+            .media-left#sideMenu
+              .messages-list
+                .panel.panel-default
+                  ul.list-group
+                    li.list-group-item
+                        .media.user-list-height
+                          .media-left
+                            span.user.user-list-name Groups
+                            span#chatlist.hideMe=chatlist
+                    - if(group_list){
+                        + printGroupList(group_list)
+                    -}
+                    li.list-group-item
+                        .media.user-list-height
+                          .media-left
+                            span.user.user-list-name Utils
+                            span#chatlist.hideMe=chatlist
+                    li.list-group-item
+                        a.hospital
+                            .media.user-list-height
+                              .media-left
+                                span.user.user-list-name(onclick='showHospitals()') Hospital
+                                span#chatlist.hideMe=chatlist
+                    -if(user.type % 10 == 5 || user.type % 10 == 7 || user.type % 10 == 8 || user.type % 10 == 9 || username == "ESNAdmin"){
+                            li.list-group-item
+                                a.incidents
+                                    .media.user-list-height
+                                      .media-left
+                                        span.user.user-list-name(onclick='showIncidents()') Incidents
+                            li.list-group-item
+                                a.trucks
+                                    .media.user-list-height
+                                      .media-left
+                                        span.user.user-list-name(onclick='showTrucks()') Trucks
+                    -}
+                    - if(user.type % 10 == 5 || user.type % 10 == 7 || user.type % 10 == 1){
+                            li.list-group-item
+                                a.cars
+                                    .media.user-list-height
+                                      .media-left
+                                        span.user.user-list-name(onclick='showCars()') Cars
+
+                    -}
+                    li.list-group-item
+                        .media.user-list-height
+                          .media-left
+                            span.user.user-list-name Contacts
+                            span#chatlist.hideMe=chatlist
+                    - if (user_list){
+                      +printUserList(author, user_list)
+                    -}
+
+            .media-body
+                #map
+                br
+                input.pull-right#showSide.btn.btn-primary(type="button", value="toggle")

@@ -1,0 +1,35 @@
+# setup node environment
+machine:
+  node:
+    version: 4.5.0
+
+# merge master before testing to make sure all tests pass
+# with the updated version of master
+checkout:
+   post:
+   # Sometimes git might ask for your identity and block the build. Add one valid account here:
+    - git config user.email "darrenyin0110@yahoo.com"
+    - git config user.name "Darren Yin"
+   # Merge with master on CircleCI before running the tests.
+
+# install dependencies
+dependencies:
+  override:
+    - npm install -g grunt-cli mocha istanbul
+    - npm install
+
+# run tests
+test:
+  override:
+    - mkdir -p $CIRCLE_TEST_REPORTS/mocha
+    - grunt circleci
+
+deployment:
+  production:
+    branch: master
+    heroku:
+      appname: esn-s17
+  development:
+    branch: develop
+    heroku:
+      appname: esn-s17-develop
